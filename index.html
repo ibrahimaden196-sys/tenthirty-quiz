@@ -1,1 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1833FF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="tenthirty Quiz">
+<title>tenthirty — Brain Blast</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R4W40TN27Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-R4W40TN27Q');
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN: BaseClub aesthetic
+   Electric blue · Lime green · Chunky white type
+   Grid overlay · Pill buttons · Floating glassmorphic cards
+   Font: Archivo Black — exactly matching the reference
+═══════════════════════════════════════════════════ */
+:root {
+  --blue:       #1833FF;
+  --blue-dark:  #0E20CC;
+  --blue-deep:  #0A0E2A;
+  --lime:       #C1FF2E;
+  --lime-dark:  #A3E620;
+  --white:      #FFFFFF;
+  --off:        #E8E8E8;
+  --glass:      rgba(255,255,255,0.10);
+  --glass2:     rgba(255,255,255,0.18);
+  --border:     rgba(255,255,255,0.18);
+  --border2:    rgba(255,255,255,0.30);
+  --red:        #FF3535;
+  --green:      #00E676;
+  --yellow:     #FFE600;
+  --text-dim:   rgba(255,255,255,0.45);
+  --safe-top:   env(safe-area-inset-top, 0px);
+  --safe-bot:   env(safe-area-inset-bottom, 0px);
+}
 
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html { height: 100%; overflow: hidden; }
+
+body {
+  background: var(--blue);
+  color: var(--white);
+  font-family: 'Archivo', sans-serif;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── SIGNATURE GRID OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.065) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SCREENS ── */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease, transform .28s ease;
+  transform: translateY(16px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bot);
+  z-index: 1;
+}
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.screen.exit {
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════
+   HOME SCREEN
+═══════════════════════════════════════════════════ */
+#home {
+  padding: 0 16px 36px;
+  align-items: center;
+}
+
+/* NAV */
+.nav {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0 10px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  padding: 7px 16px 7px 10px;
+}
+.nav-logo .ndot {
+  width: 9px; height: 9px;
+  background: var(--lime);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--lime);
+}
+.nav-logo span {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: .72rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.nav-pill {
+  background: var(--lime);
+  color: var(--blue-deep);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: .58rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  transition: transform .15s, background .15s;
+}
+.nav-pill:active { transform: scale(.93); background: var(--lime-dark); }
+
+/* HERO */
+.hero {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  padding-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.hero-tag {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(1.4rem, 7vw, 2.2rem);
+  color: var(--lime);
+  line-height: 1;
+  margin-bottom: -4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.hero-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(2.8rem, 16vw, 6rem);
+  line-height: .88;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: -.02em;
+  position: relative;
+}
+
+/* Floating glass cards — signature decorative element */
+.fcards {
+  position: absolute;
+  top: 4px;
+  right: -8px;
+  pointer-events: none;
+  width: 115px;
+}
+
+.fcard {
+  position: absolute;
+  background: var(--glass2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid var(--border2);
+  border-radius: 16px;
+  padding: 10px 12px;
+  width: 105px;
+}
+
+.fcard:nth-child(1) {
+  top: 0; right: 0;
+  transform: rotate(8deg);
+  animation: flt1 3.2s ease-in-out infinite;
+}
+.fcard:nth-child(2) {
+  top: 50px; right: 22px;
+  transform: rotate(-6deg);
+  animation: flt2 3.8s ease-in-out infinite .6s;
+}
+
+@keyframes flt1 {
+  0%,100%{ transform:rotate(8deg) translateY(0px); }
+  50%{ transform:rotate(8deg) translateY(-7px); }
+}
+@keyframes flt2 {
+  0%,100%{ transform:rotate(-6deg) translateY(0px); }
+  50%{ transform:rotate(-6deg) translateY(-5px); }
+}
+
+.fcard-icon { font-size: .95rem; display:block; margin-bottom:4px; }
+.fcard-name { font-family:'Archivo Black',sans-serif; font-size:.58rem; color:var(--white); display:block; letter-spacing:.02em; }
+.fcard-val  { font-size:.5rem; color:rgba(255,255,255,.55); display:block; margin-top:2px; }
+
+/* lime spinning badge */
+.spin-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 72px; height: 72px;
+  background: var(--lime);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.spin-badge-text {
+  position: absolute;
+  width: 100%; height: 100%;
+  animation: rotateBadge 8s linear infinite;
+}
+
+.spin-badge-text svg {
+  width: 100%; height: 100%;
+}
+
+.spin-badge-center {
+  font-size: 1.1rem;
+  position: relative;
+  z-index: 1;
+  animation: rotateBadge 8s linear infinite reverse;
+}
+
+@keyframes rotateBadge { to{ transform:rotate(360deg); } }
+
+/* SECTION LABEL */
+.slabel {
+  width: 100%;
+  max-width: 480px;
+  font-size: .56rem;
+  font-weight: 700;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 9px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slabel .sel-all {
+  color: var(--lime);
+  background: none;
+  border: none;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: .52rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* CAT GRID */
+.cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 2px;
+}
+
+.cat-tile {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 11px 12px 10px;
+  cursor: pointer;
+  transition: all .18s;
+  position: relative;
+  overflow: hidden;
+}
+.cat-tile.sel {
+  background: var(--glass2);
+  border-color: var(--white);
+}
+.cat-tile.sel.ct-football {
+  border-color: var(--lime);
+  background: rgba(193,255,46,.12);
+}
+.cat-tile:active { transform: scale(.95); }
+
+.cat-check {
+  position: absolute;
+  top: 9px; right: 9px;
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .52rem; font-weight: 900;
+  color: transparent;
+  transition: all .15s;
+}
+.cat-tile.sel .cat-check {
+  background: var(--lime);
+  border-color: var(--lime);
+  color: var(--blue-deep);
+}
+
+.cat-icon { font-size: 1.3rem; display:block; margin-bottom:4px; line-height:1; }
+.cat-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: .9rem;
+  text-transform: uppercase;
+  color: var(--white);
+  display: block;
+  line-height: 1;
+}
+.cat-count {
+  font-size: .46rem;
+  color: var(--text-dim);
+  display: block;
+  margin-top: 4px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* DIFF PILLS */
+.diff-row {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 7px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.diff-tile {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  padding: 10px 0;
+  text-align: center;
+  cursor: pointer;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: all .15s;
+}
+.diff-tile.sel {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--blue);
+}
+.diff-tile:active { transform: scale(.95); }
+
+/* SETTINGS */
+.settings-row {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 7px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.stile {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 11px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all .15s;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+}
+.stile:active { transform: scale(.95); }
+.stile-val {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.3rem;
+  color: var(--white);
+  line-height: 1;
+}
+.stile-lbl { font-size: .45rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); }
+
+/* START BUTTON */
+.start-btn {
+  width: 100%;
+  max-width: 480px;
+  background: var(--lime);
+  color: var(--blue-deep);
+  border: none;
+  border-radius: 100px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 18px 0;
+  cursor: pointer;
+  transition: all .18s;
+  position: relative;
+  overflow: hidden;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.start-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; right: 100%; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  transition: left .5s, right .5s;
+}
+.start-btn:hover::after { left: 0; right: -100%; }
+.start-btn:active { transform: scale(.98); background: var(--lime-dark); }
+
+.home-footer {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.best-lbl { font-size: .5rem; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+.best-lbl span { color: var(--lime); font-family: "Archivo Black", sans-serif; }
+.credit { font-size: .45rem; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); }
+
+/* ═══════════════════════════════════════════════════
+   GAME SCREEN
+═══════════════════════════════════════════════════ */
+#game {
+  background: var(--blue);
+  overflow: hidden;
+}
+
+/* HUD BAR */
+.game-bar {
+  flex-shrink: 0;
+  background: rgba(10,14,42,.65);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.gbar-left { display:flex; align-items:center; gap:9px; }
+
+.home-btn {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  color: var(--white);
+  font-size: .95rem;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.home-btn:hover { background: var(--glass2); border-color: var(--border2); }
+.home-btn:active { transform: scale(.88); }
+
+.hud-score-val {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.55rem;
+  color: var(--lime);
+  line-height: 1;
+}
+.hud-score-val.bump { animation: sbump .2s ease-out; }
+@keyframes sbump { 0%{transform:scale(1);}50%{transform:scale(1.22);}100%{transform:scale(1);} }
+
+.hud-lbl { font-size: .42rem; letter-spacing: .2em; text-transform: uppercase; color: var(--text-dim); }
+
+.hud-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.hud-qnum { font-size: .52rem; letter-spacing: .18em; text-transform: uppercase; color: var(--text-dim); }
+.q-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.q-prog-fill {
+  height: 100%;
+  background: var(--lime);
+  border-radius: 4px;
+  transition: width .4s ease;
+}
+
+.ai-badge {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  font-size: .42rem;
+  letter-spacing: .12em;
+  color: var(--lime);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.ai-badge .spin { width:6px;height:6px;border:1.5px solid var(--lime);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0; }
+@keyframes spin { to{transform:rotate(360deg);} }
+
+.hud-right { display:flex; gap:10px; align-items:center; }
+.hud-stat { display:flex; flex-direction:column; align-items:center; gap:1px; }
+.hud-stat-val { font-family:'Archivo Black',sans-serif; font-size:1rem; line-height:1; }
+.hud-stat-val.streak { color: var(--lime); }
+.hud-stat-val.lives  { font-size: .82rem; }
+
+/* TIMER */
+.timer-track { flex-shrink:0; width:100%; height:5px; background:rgba(255,255,255,.1); }
+.timer-fill  { height:100%; background:var(--lime); transition:width .1s linear, background .4s; }
+.timer-fill.t-warn   { background: var(--yellow); }
+.timer-fill.t-danger { background: var(--red); animation: tflash .45s ease-in-out infinite alternate; }
+@keyframes tflash { from{opacity:1;}to{opacity:.3;} }
+
+/* AI LOADING SCREEN */
+.ai-loading {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex: 1;
+  padding: 40px 20px;
+}
+.ai-loading.show { display:flex; }
+
+.ai-spinner {
+  width: 54px; height: 54px;
+  border: 3px solid rgba(255,255,255,.12);
+  border-top-color: var(--lime);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+.ai-load-title { font-family:'Archivo Black',sans-serif; font-size:1.5rem; text-transform:uppercase; letter-spacing:.04em; }
+.ai-load-sub   { font-size:.55rem; letter-spacing:.2em; text-transform:uppercase; color:var(--text-dim); text-align:center; }
+.ai-dots span  { color:var(--lime); animation:aiblink 1.2s step-end infinite; }
+.ai-dots span:nth-child(2){animation-delay:.4s;}
+.ai-dots span:nth-child(3){animation-delay:.8s;}
+@keyframes aiblink{0%,100%{opacity:1;}50%{opacity:.1;}}
+
+/* Q BODY */
+.q-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 18px 14px 6px;
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.q-tags { display:flex; gap:6px; margin-bottom:12px; flex-shrink:0; flex-wrap:wrap; }
+.q-tag {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: .48rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  color: var(--white);
+  background: var(--glass);
+}
+.q-tag.Football { border-color:var(--lime); color:var(--lime); background:rgba(193,255,46,.08); }
+.q-tag.easy     { border-color:var(--lime); color:var(--lime); }
+.q-tag.medium   { border-color:var(--yellow); color:var(--yellow); }
+.q-tag.hard     { border-color:var(--red); color:var(--red); }
+.q-tag.ai-gen   { border-color:rgba(255,255,255,.15); }
+
+.q-text {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(1.25rem, 5.5vw, 2rem);
+  line-height: 1.16;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 16px;
+  flex-shrink: 0;
+  letter-spacing: -.01em;
+}
+
+/* LIFELINES */
+.lifelines {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.ll {
+  flex: 1;
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-dim);
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: .47rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 9px 4px;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.ll .ll-icon { font-size: .9rem; line-height:1; }
+.ll:hover:not(:disabled) { background:var(--glass2); color:var(--white); border-color:var(--border2); }
+.ll:active:not(:disabled) { transform:scale(.92); }
+.ll:disabled { opacity:.2; cursor:default; }
+
+/* ANSWERS */
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.ans {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  color: var(--white);
+  font-family: 'Archivo', sans-serif;
+  font-weight: 600;
+  font-size: .7rem;
+  line-height: 1.4;
+  padding: 13px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .12s;
+}
+.ans-letter {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: .8rem;
+  color: rgba(255,255,255,.35);
+  margin-right: 6px;
+  transition: color .12s;
+}
+.ans:hover:not(:disabled) {
+  background: var(--glass2);
+  border-color: var(--white);
+  transform: translateX(3px);
+}
+.ans:hover:not(:disabled) .ans-letter { color:var(--white); }
+.ans:active:not(:disabled) { transform:scale(.97); }
+
+.ans.correct {
+  border-color: var(--lime) !important;
+  background: rgba(193,255,46,.16) !important;
+  color: var(--lime) !important;
+}
+.ans.correct .ans-letter { color:var(--lime) !important; }
+.ans.wrong {
+  border-color: var(--red) !important;
+  background: rgba(255,53,53,.1) !important;
+  color: rgba(255,255,255,.35) !important;
+  text-decoration: line-through;
+}
+.ans.wrong .ans-letter { color:var(--red) !important; }
+.ans:disabled { cursor:default; }
+
+/* FEEDBACK */
+.feedback {
+  flex-shrink: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 0;
+  gap: 10px;
+}
+.fb-text {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: .95rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  flex: 1;
+}
+.fb-text.ok   { color:var(--lime); }
+.fb-text.no   { color:var(--red); }
+.fb-text.skip { color:var(--text-dim); }
+
+.next-btn {
+  background: var(--white);
+  color: var(--blue);
+  border: none;
+  border-radius: 100px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: .82rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+  display: none;
+  flex-shrink: 0;
+}
+.next-btn.show { display:block; }
+.next-btn:hover { background:var(--lime); }
+.next-btn:active { transform:scale(.95); }
+
+/* DOTS */
+.dots-bar {
+  flex-shrink: 0;
+  display: flex;
+  gap: 4px;
+  padding: 10px 14px 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.18);
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.dot.c   { background:var(--lime); border-color:var(--lime); }
+.dot.w   { background:var(--red); border-color:var(--red); }
+.dot.cur { background:var(--white); border-color:var(--white); box-shadow:0 0 8px rgba(255,255,255,.5); }
+
+/* ═══════════════════════════════════════════════════
+   RESULT SCREEN
+═══════════════════════════════════════════════════ */
+#result {
+  background: var(--blue);
+  align-items: center;
+  padding: 28px 18px 40px;
+  gap: 14px;
+}
+
+.result-brand {
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  padding: 6px 18px;
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.grade-ring {
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.grade-ring::before {
+  content:'';
+  position:absolute;
+  inset:-5px;
+  border-radius:50%;
+  border:2.5px solid transparent;
+  border-top-color:var(--lime);
+  animation:spin 3s linear infinite;
+}
+.grade-letter {
+  font-family:'Archivo Black',sans-serif;
+  font-size:3.5rem;
+  line-height:1;
+  color:var(--lime);
+}
+.grade-sub { font-size:.48rem; letter-spacing:.2em; text-transform:uppercase; color:var(--text-dim); margin-top:1px; }
+
+.result-verdict {
+  font-family:'Archivo Black',sans-serif;
+  font-size:clamp(2.4rem,10vw,4.5rem);
+  text-transform:uppercase;
+  letter-spacing:-.01em;
+  line-height:1;
+  text-align:center;
+}
+.result-verdict.win  { color:var(--lime); }
+.result-verdict.ok   { color:var(--white); }
+.result-verdict.lose { color:var(--red); }
+
+.new-best {
+  font-size:.58rem;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  color:var(--lime);
+  font-weight:700;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+
+.score-box {
+  background: var(--glass2);
+  border: 1.5px solid var(--border2);
+  border-radius: 20px;
+  padding: 20px 44px;
+  text-align: center;
+  min-width: 240px;
+  position: relative;
+  overflow: hidden;
+}
+.score-box::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(193,255,46,.14), transparent 70%);
+}
+.score-big {
+  font-family:'Archivo Black',sans-serif;
+  font-size:4rem;
+  color:var(--lime);
+  display:block;
+  line-height:1;
+  position:relative;
+}
+.score-lbl { font-size:.5rem; letter-spacing:.22em; text-transform:uppercase; color:var(--text-dim); display:block; margin-top:4px; }
+
+.result-stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  width:100%;
+  max-width:380px;
+}
+.rstat {
+  background:var(--glass);
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  padding:13px 8px;
+  text-align:center;
+}
+.rstat-v { font-family:'Archivo Black',sans-serif; font-size:1.9rem; display:block; line-height:1; }
+.rstat-v.g { color:var(--lime); }
+.rstat-v.r { color:var(--red); }
+.rstat-v.b { color:var(--white); }
+.rstat-l { font-size:.46rem; letter-spacing:.16em; text-transform:uppercase; color:var(--text-dim); display:block; margin-top:3px; }
+
+.result-btns {
+  display:flex;
+  gap:8px;
+  width:100%;
+  max-width:380px;
+}
+.rbtn {
+  flex:1;
+  font-family:'Archivo Black',sans-serif;
+  font-size:.95rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  padding:15px 0;
+  cursor:pointer;
+  border-radius:100px;
+  transition:all .18s;
+}
+.rbtn.play { background:var(--lime); border:none; color:var(--blue-deep); }
+.rbtn.play:hover { background:var(--lime-dark); }
+.rbtn.menu { background:transparent; border:1.5px solid var(--border); color:var(--text-dim); }
+.rbtn.menu:hover { border-color:var(--white); color:var(--white); }
+.rbtn:active { transform:scale(.95); }
+
+.result-credit { font-size:.45rem; letter-spacing:.16em; text-transform:uppercase; color: var(--lime); }
+
+/* ── FLOATING EFFECTS ── */
+.streak-pop {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 3rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--lime);
+  text-shadow: 0 0 40px rgba(193,255,46,.7);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1000;
+  white-space: nowrap;
+}
+.streak-pop.fire { animation: sflyup .9s ease-out forwards; }
+@keyframes sflyup {
+  0%  { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  40% { opacity:1; transform:translate(-50%,-62%) scale(1.14); }
+  100%{ opacity:0; transform:translate(-50%,-88%) scale(.86); }
+}
+
+.pts-pop {
+  position: fixed;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.5rem;
+  color: var(--lime);
+  pointer-events: none;
+  z-index: 1000;
+  text-shadow: 0 0 12px rgba(193,255,46,.7);
+  animation: ptsFly .9s ease-out forwards;
+}
+@keyframes ptsFly {
+  0%  { opacity:1; transform:translateY(0); }
+  100%{ opacity:0; transform:translateY(-70px); }
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:400px){
+  .answers { grid-template-columns:1fr; }
+  .fcards  { display:none; }
+}
+@media(min-height:800px){
+  .q-body { padding:24px 14px 10px; }
+  .q-text { font-size:clamp(1.4rem,5.5vw,2.1rem); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HOME ══════════════ -->
+<div class="screen active" id="home">
+
+  <div class="nav">
+    <div class="nav-logo">
+      <span class="ndot"></span>
+      <span>tenthirty</span>
+    </div>
+    <button class="nav-pill" id="pool-badge">500+ Qs</button>
+  </div>
+
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <div class="hero-tag"><span style="color:var(--lime);font-size:1.1em">#</span>BRAIN</div>
+    <div class="hero-title">
+      BLAST
+      <span style="display:block">QUIZ</span>
+    </div>
+
+    <!-- Floating glassmorphic cards -->
+    <div class="fcards">
+      <div class="fcard">
+        <span class="fcard-icon">🏆</span>
+        <span class="fcard-name">Best Score</span>
+        <span class="fcard-val" id="fc-best">0 pts</span>
+      </div>
+      <div class="fcard">
+        <span class="fcard-icon">⚡</span>
+        <span class="fcard-name">AI Powered</span>
+        <span class="fcard-val">Unlimited Qs</span>
+      </div>
+    </div>
+
+    <!-- Spinning lime badge (from reference image) -->
+    <div class="spin-badge" style="position:absolute;bottom:8px;right:0">
+      <div class="spin-badge-text">
+        <svg viewBox="0 0 72 72">
+          <defs>
+            <path id="circle" d="M36,36 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0"/>
+          </defs>
+          <text font-family="Archivo Black,sans-serif" font-size="8.5" fill="#0A0E2A" font-weight="900" letter-spacing="1.5" text-anchor="start">
+            <textPath href="#circle">PLAY FREE · PLAY FREE · PLAY</textPath>
+          </text>
+        </svg>
+      </div>
+      <span class="spin-badge-center">✦</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="slabel" style="margin-top:10px">
+    <span>Categories</span>
+    <button class="sel-all" onclick="selectAll()">Select All</button>
+  </div>
+
+  <div class="cat-grid">
+    <div class="cat-tile ct-music sel" data-cat="Music" onclick="toggleCat(this)">
+      <span class="cat-check">✓</span>
+      <span class="cat-icon">🎵</span>
+      <span class="cat-name">Music</span>
+      <span class="cat-count" id="cnt-Music">—</span>
+    </div>
+    <div class="cat-tile ct-movies sel" data-cat="Movies" onclick="toggleCat(this)">
+      <span class="cat-check">✓</span>
+      <span class="cat-icon">🎬</span>
+      <span class="cat-name">Movies</span>
+      <span class="cat-count" id="cnt-Movies">—</span>
+    </div>
+    <div class="cat-tile ct-dishes sel" data-cat="Dishes" onclick="toggleCat(this)">
+      <span class="cat-check">✓</span>
+      <span class="cat-icon">🍽️</span>
+      <span class="cat-name">Dishes</span>
+      <span class="cat-count" id="cnt-Dishes">—</span>
+    </div>
+    <div class="cat-tile ct-general sel" data-cat="General" onclick="toggleCat(this)">
+      <span class="cat-check">✓</span>
+      <span class="cat-icon">🌍</span>
+      <span class="cat-name">General</span>
+      <span class="cat-count" id="cnt-General">—</span>
+    </div>
+    <div class="cat-tile ct-football sel" data-cat="Football" onclick="toggleCat(this)" style="grid-column:span 2">
+      <span class="cat-check">✓</span>
+      <span class="cat-icon">⚽</span>
+      <span class="cat-name">Football</span>
+      <span class="cat-count" id="cnt-Football">—</span>
+    </div>
+  </div>
+
+  <!-- DIFFICULTY -->
+  <div class="slabel" style="margin-top:8px"><span>Difficulty</span></div>
+  <div class="diff-row">
+    <div class="diff-tile sel" data-d="easy"   onclick="toggleDiff(this)">Easy</div>
+    <div class="diff-tile sel" data-d="medium" onclick="toggleDiff(this)">Med</div>
+    <div class="diff-tile sel" data-d="hard"   onclick="toggleDiff(this)">Hard</div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="slabel" style="margin-top:8px"><span>Round Settings</span></div>
+  <div class="settings-row">
+    <div class="stile" onclick="cycleQCount()">
+      <span class="stile-val" id="qs-val">15</span>
+      <span class="stile-lbl">Questions</span>
+    </div>
+    <div class="stile" onclick="cycleLives()">
+      <span class="stile-val" id="lives-val">10</span>
+      <span class="stile-lbl">Lives</span>
+    </div>
+    <div class="stile" onclick="cycleTimer()">
+      <span class="stile-val" id="timer-val">ON</span>
+      <span class="stile-lbl">Timer</span>
+    </div>
+  </div>
+
+  <div class="slabel" style="margin-top:8px"></div>
+  <button class="start-btn" onclick="startGame()">▶ START GAME</button>
+
+  <div class="home-footer">
+    <div class="best-lbl" id="home-best">Best: <span>0</span></div>
+    <div class="credit">Ibrahim Aden · tenthirty · © 2026</div>
+  </div>
+
+</div>
+
+<!-- ══════════════ GAME ══════════════ -->
+<div class="screen" id="game">
+
+  <div class="game-bar">
+    <div class="gbar-left">
+      <button class="home-btn" onclick="confirmHome()" title="Home">⌂</button>
+      <div>
+        <div class="hud-score-val" id="hud-score">0</div>
+        <div class="hud-lbl">Score</div>
+      </div>
+    </div>
+
+    <div class="hud-center">
+      <div class="hud-qnum" id="hud-qnum">Q 1 / 15</div>
+      <div class="q-progress">
+        <div class="q-prog-fill" id="q-prog-fill" style="width:0%"></div>
+      </div>
+      <div class="ai-badge" id="ai-badge">
+        <div class="spin"></div>AI loading
+      </div>
+    </div>
+
+    <div class="hud-right">
+      <div class="hud-stat">
+        <span class="hud-stat-val streak" id="hud-streak">0</span>
+        <span class="hud-lbl">Streak</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-stat-val lives" id="hud-lives">❤️x10</span>
+        <span class="hud-lbl">Lives</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="timer-track">
+    <div class="timer-fill" id="timer-fill"></div>
+  </div>
+
+  <!-- AI LOADING STATE -->
+  <div class="ai-loading" id="ai-loading">
+    <div class="ai-spinner"></div>
+    <div class="ai-load-title">AI IS THINKING<span class="ai-dots"><span>.</span><span>.</span><span>.</span></span></div>
+    <div class="ai-load-sub">Generating fresh questions for you</div>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="q-body" id="q-body">
+    <div class="q-tags">
+      <span class="q-tag" id="q-cat-tag">Music</span>
+      <span class="q-tag diff" id="q-diff-tag">EASY</span>
+      <span class="q-tag ai-gen" id="q-ai-tag" style="display:none">✦ AI</span>
+    </div>
+    <div class="q-text" id="q-text">Loading...</div>
+
+    <div class="lifelines">
+      <button class="ll" id="ll-50" onclick="useFifty()">
+        <span class="ll-icon">✂️</span>50:50
+      </button>
+      <button class="ll" id="ll-skip" onclick="useSkip()">
+        <span class="ll-icon">⏭</span>Skip
+      </button>
+      <button class="ll" id="ll-time" onclick="useTime()">
+        <span class="ll-icon">⏰</span>+10s
+      </button>
+    </div>
+
+    <div class="answers" id="answers"></div>
+
+    <div class="feedback">
+      <span class="fb-text" id="fb-text"></span>
+      <button class="next-btn" id="next-btn" onclick="nextQ()">NEXT →</button>
+    </div>
+  </div>
+
+  <div class="dots-bar" id="dots-bar"></div>
+</div>
+
+<!-- ══════════════ RESULT ══════════════ -->
+<div class="screen" id="result">
+  <div class="result-brand">tenthirty · Brain Blast</div>
+
+  <div class="grade-ring">
+    <span class="grade-letter" id="grade-letter">B</span>
+    <span class="grade-sub" id="grade-sub">RANK</span>
+  </div>
+
+  <div class="result-verdict" id="result-verdict">WELL DONE</div>
+  <div class="new-best" id="new-best" style="display:none">★ NEW HIGH SCORE ★</div>
+
+  <div class="score-box">
+    <span class="score-big" id="result-score">0</span>
+    <span class="score-lbl">Final Score</span>
+  </div>
+
+  <div class="result-stats">
+    <div class="rstat"><span class="rstat-v g" id="rs-correct">0</span><span class="rstat-l">Correct</span></div>
+    <div class="rstat"><span class="rstat-v r" id="rs-wrong">0</span><span class="rstat-l">Wrong</span></div>
+    <div class="rstat"><span class="rstat-v b" id="rs-best">0</span><span class="rstat-l">Streak</span></div>
+  </div>
+
+  <div class="result-btns">
+    <button class="rbtn play" onclick="startGame()">▶ Play Again</button>
+    <button class="rbtn menu" onclick="goHome()">Menu</button>
+  </div>
+
+  <div class="result-credit">tenthirty Brain Blast · Created by Ibrahim Aden · © 2026</div>
+</div>
+
+<!-- EFFECTS -->
+<div class="streak-pop" id="streak-pop"></div>
+
+<script>
+
+// ════════════════════════════════════════════════
+//  QUESTION BANK — 500+ verified questions
+// ════════════════════════════════════════════════
+var QB = [
+// ── MUSIC EASY (30) ──
+{cat:"Music",diff:"easy",q:"Which artist released the album Thriller in 1982?",a:["Prince","Michael Jackson","Madonna","Whitney Houston"],c:1},
+{cat:"Music",diff:"easy",q:"How many members were in The Beatles?",a:["3","4","5","6"],c:1},
+{cat:"Music",diff:"easy",q:"Bohemian Rhapsody is a song by which band?",a:["Led Zeppelin","Rolling Stones","Queen","AC/DC"],c:2},
+{cat:"Music",diff:"easy",q:"Which singer is known as the Queen of Pop?",a:["Beyonce","Rihanna","Madonna","Lady Gaga"],c:2},
+{cat:"Music",diff:"easy",q:"Shape of You is a hit by which artist?",a:["Sam Smith","Ed Sheeran","Charlie Puth","Shawn Mendes"],c:1},
+{cat:"Music",diff:"easy",q:"Which band performed Smells Like Teen Spirit?",a:["Pearl Jam","Nirvana","Soundgarden","Alice in Chains"],c:1},
+{cat:"Music",diff:"easy",q:"Rihanna is originally from which country?",a:["Jamaica","Trinidad","Barbados","Haiti"],c:2},
+{cat:"Music",diff:"easy",q:"Which pop star is known as Mother Monster?",a:["Katy Perry","Nicki Minaj","Lady Gaga","Cardi B"],c:2},
+{cat:"Music",diff:"easy",q:"Despacito is a song in which language?",a:["Portuguese","Spanish","Italian","French"],c:1},
+{cat:"Music",diff:"easy",q:"Which country does K-pop originate from?",a:["Japan","China","South Korea","Thailand"],c:2},
+{cat:"Music",diff:"easy",q:"What instrument does a drummer play?",a:["Guitar","Drums","Piano","Violin"],c:1},
+{cat:"Music",diff:"easy",q:"Uptown Funk was a collaboration between Bruno Mars and who?",a:["Pharrell Williams","Mark Ronson","will.i.am","DJ Khaled"],c:1},
+{cat:"Music",diff:"easy",q:"Which boy band sang I Want It That Way?",a:["NSYNC","One Direction","Backstreet Boys","New Kids on the Block"],c:2},
+{cat:"Music",diff:"easy",q:"Who sang Hello from the other side?",a:["Sam Smith","Beyonce","Adele","Amy Winehouse"],c:2},
+{cat:"Music",diff:"easy",q:"Gangnam Style was a viral hit by which Korean artist?",a:["BTS","PSY","G-Dragon","Rain"],c:1},
+{cat:"Music",diff:"easy",q:"Which female artist released the album Lemonade?",a:["Rihanna","Taylor Swift","Beyonce","Nicki Minaj"],c:2},
+{cat:"Music",diff:"easy",q:"What genre of music is associated with Nashville Tennessee?",a:["Jazz","Blues","Country","Soul"],c:2},
+{cat:"Music",diff:"easy",q:"Which rapper is known as the God of Rap and created the Wu-Tang Clan?",a:["Rakim","RZA","Jay-Z","Nas"],c:1},
+{cat:"Music",diff:"easy",q:"Baby by Justin Bieber features which rapper?",a:["Drake","Kanye West","Ludacris","Lil Wayne"],c:2},
+{cat:"Music",diff:"easy",q:"Which band sang Don't Stop Believin?",a:["Journey","Foreigner","Boston","REO Speedwagon"],c:0},
+{cat:"Music",diff:"easy",q:"Waka Waka was the official song of which World Cup?",a:["2006","2010","2014","2018"],c:1},
+{cat:"Music",diff:"easy",q:"Which artist sang Rolling in the Deep?",a:["Amy Winehouse","Duffy","Adele","Paloma Faith"],c:2},
+{cat:"Music",diff:"easy",q:"One Dance is a hit by which artist?",a:["Chris Brown","Bryson Tiller","Drake","Tory Lanez"],c:2},
+{cat:"Music",diff:"easy",q:"Which band sang Under the Bridge?",a:["Soundgarden","Pearl Jam","Red Hot Chili Peppers","Nirvana"],c:2},
+{cat:"Music",diff:"easy",q:"Stairway to Heaven is a classic song by which band?",a:["The Who","Led Zeppelin","Deep Purple","Black Sabbath"],c:1},
+{cat:"Music",diff:"easy",q:"Which artist is known as the King of Pop?",a:["Prince","Elvis Presley","Michael Jackson","David Bowie"],c:2},
+{cat:"Music",diff:"easy",q:"Which female rapper sang Anaconda?",a:["Cardi B","Iggy Azalea","Nicki Minaj","Megan Thee Stallion"],c:2},
+{cat:"Music",diff:"easy",q:"Happy was a big hit for which artist?",a:["Bruno Mars","Pharrell Williams","Jason Derulo","Ne-Yo"],c:1},
+{cat:"Music",diff:"easy",q:"Which Turkish pop star released the iconic song Simarik?",a:["Sezen Aksu","Tarkan","Ajda Pekkan","Teoman"],c:1},
+{cat:"Music",diff:"easy",q:"Which country is Bob Marley from?",a:["Trinidad","Barbados","Jamaica","Haiti"],c:2},
+
+// ── MUSIC MEDIUM (25) ──
+{cat:"Music",diff:"medium",q:"Which rapper's real name is Aubrey Drake Graham?",a:["Kendrick Lamar","Drake","J. Cole","Travis Scott"],c:1},
+{cat:"Music",diff:"medium",q:"In which country did reggae music originate?",a:["Brazil","Nigeria","Cuba","Jamaica"],c:3},
+{cat:"Music",diff:"medium",q:"Blinding Lights is a massive hit by which artist?",a:["Post Malone","Drake","The Weeknd","Bruno Mars"],c:2},
+{cat:"Music",diff:"medium",q:"Which band released Hotel California?",a:["Fleetwood Mac","The Doors","Eagles","Lynyrd Skynyrd"],c:2},
+{cat:"Music",diff:"medium",q:"What is the best-selling album of all time?",a:["Back in Black","Thriller","Dark Side of the Moon","Bat Out of Hell"],c:1},
+{cat:"Music",diff:"medium",q:"Lose Yourself won an Academy Award for which rapper?",a:["Jay-Z","Kanye West","Eminem","50 Cent"],c:2},
+{cat:"Music",diff:"medium",q:"Freddie Mercury was the lead singer of which band?",a:["Journey","Aerosmith","Queen","The Who"],c:2},
+{cat:"Music",diff:"medium",q:"Kurt Cobain was the lead singer of which band?",a:["Pearl Jam","Soundgarden","Nirvana","Alice in Chains"],c:2},
+{cat:"Music",diff:"medium",q:"What does BPM stand for in music?",a:["Bass Per Measure","Beats Per Minute","Bass Playing Method","Bars Per Minute"],c:1},
+{cat:"Music",diff:"medium",q:"Which city is considered the birthplace of jazz?",a:["Chicago","New York","Memphis","New Orleans"],c:3},
+{cat:"Music",diff:"medium",q:"Lose Yourself is from the 8 Mile soundtrack by which artist?",a:["50 Cent","Eminem","Dr. Dre","Jay-Z"],c:1},
+{cat:"Music",diff:"medium",q:"Which artist sang Hotline Bling?",a:["Future","Drake","Bryson Tiller","PartyNextDoor"],c:1},
+{cat:"Music",diff:"medium",q:"Which genre of music uses a four-on-the-floor kick drum pattern?",a:["Hip-hop","Rock","Electronic/Dance","Reggae"],c:2},
+{cat:"Music",diff:"medium",q:"Somebody That I Used to Know is a hit by which artist?",a:["Bon Iver","Gotye","The National","Sufjan Stevens"],c:1},
+{cat:"Music",diff:"medium",q:"Which artist is known for the Eras Tour?",a:["Beyonce","Billie Eilish","Taylor Swift","Olivia Rodrigo"],c:2},
+{cat:"Music",diff:"medium",q:"Which British city produced bands like The Beatles and The Coral?",a:["London","Manchester","Birmingham","Liverpool"],c:3},
+{cat:"Music",diff:"medium",q:"Sultans of Swing is the debut single of which band?",a:["Dire Straits","The Police","Steely Dan","Elvis Costello"],c:0},
+{cat:"Music",diff:"medium",q:"Which instrument does Carlos Santana play?",a:["Piano","Drums","Electric guitar","Bass"],c:2},
+{cat:"Music",diff:"medium",q:"Industry Baby is a song by which artist?",a:["Tyler the Creator","Jack Harlow","Lil Nas X","Cardi B"],c:2},
+{cat:"Music",diff:"medium",q:"Which band released the album Dark Side of the Moon?",a:["Yes","Pink Floyd","Genesis","Rush"],c:1},
+{cat:"Music",diff:"medium",q:"Bad Guy is a hit single by which young artist?",a:["Dua Lipa","Ariana Grande","Billie Eilish","Olivia Rodrigo"],c:2},
+{cat:"Music",diff:"medium",q:"Which vocal range is between tenor and bass?",a:["Alto","Baritone","Mezzo-soprano","Countertenor"],c:1},
+{cat:"Music",diff:"medium",q:"Hotline Bling samples which classic song?",a:["Why Can't We Live Together by Timmy Thomas","Let's Stay Together by Al Green","Maybe by Chaka Khan","Georgia by Ray Charles"],c:0},
+{cat:"Music",diff:"medium",q:"Which artist sang a duet called Endless Love with Lionel Richie?",a:["Whitney Houston","Diana Ross","Tina Turner","Donna Summer"],c:1},
+{cat:"Music",diff:"medium",q:"Which country does the band Coldplay come from?",a:["USA","Australia","Canada","UK"],c:3},
+
+// ── MUSIC HARD (20) ──
+{cat:"Music",diff:"hard",q:"Which composer wrote Symphony No. 9 in D minor?",a:["Mozart","Bach","Chopin","Beethoven"],c:3},
+{cat:"Music",diff:"hard",q:"What year did Eminem release The Marshall Mathers LP?",a:["1999","2000","2001","2002"],c:1},
+{cat:"Music",diff:"hard",q:"Which artist holds the record for most Grammy wins with 32?",a:["Beyonce","Taylor Swift","Adele","Stevie Wonder"],c:0},
+{cat:"Music",diff:"hard",q:"Macarena was a global hit by which Spanish group?",a:["Los Lobos","Los Del Rio","Shakira","Aventura"],c:1},
+{cat:"Music",diff:"hard",q:"Which band released the concept album The Wall in 1979?",a:["Yes","Pink Floyd","Genesis","Rush"],c:1},
+{cat:"Music",diff:"hard",q:"The Rite of Spring caused a riot at its 1913 premiere — who composed it?",a:["Debussy","Mahler","Stravinsky","Prokofiev"],c:2},
+{cat:"Music",diff:"hard",q:"What is the name of Kendrick Lamar's 2015 Pulitzer-winning album?",a:["Section.80","Good Kid m.A.A.d City","To Pimp a Butterfly","DAMN."],c:2},
+{cat:"Music",diff:"hard",q:"Which country does the band Rammstein come from?",a:["Sweden","Austria","Germany","Netherlands"],c:2},
+{cat:"Music",diff:"hard",q:"Who produced Michael Jackson's Thriller album?",a:["Rick Rubin","Quincy Jones","L.A. Reid","Teddy Riley"],c:1},
+{cat:"Music",diff:"hard",q:"Waterloo was ABBA's winning song at which year's Eurovision?",a:["1972","1974","1976","1978"],c:1},
+{cat:"Music",diff:"hard",q:"Which musician famously played guitar with his teeth and behind his back?",a:["Chuck Berry","Eric Clapton","Jimi Hendrix","Carlos Santana"],c:2},
+{cat:"Music",diff:"hard",q:"What year did Michael Jackson release Thriller?",a:["1980","1981","1982","1983"],c:2},
+{cat:"Music",diff:"hard",q:"In what key is Beethoven's Fur Elise?",a:["A major","A minor","E major","E minor"],c:1},
+{cat:"Music",diff:"hard",q:"Which jazz musician was nicknamed Bird?",a:["Miles Davis","John Coltrane","Charlie Parker","Thelonious Monk"],c:2},
+{cat:"Music",diff:"hard",q:"What was The Beatles first UK number one single?",a:["Love Me Do","Please Please Me","She Loves You","From Me to You"],c:1},
+{cat:"Music",diff:"hard",q:"Which opera by Verdi features the Anvil Chorus?",a:["Rigoletto","Aida","Il Trovatore","Otello"],c:2},
+{cat:"Music",diff:"hard",q:"Which artist was born Onika Tanya Maraj?",a:["Cardi B","Megan Thee Stallion","Nicki Minaj","Lizzo"],c:2},
+{cat:"Music",diff:"hard",q:"What is the time signature of a waltz?",a:["2/4","4/4","3/4","6/8"],c:2},
+{cat:"Music",diff:"hard",q:"Which legendary label signed artists like Aretha Franklin and Ray Charles?",a:["Motown","Stax","Atlantic Records","Columbia"],c:2},
+{cat:"Music",diff:"hard",q:"The 27 Club refers to musicians who died at 27 — which is NOT a member?",a:["Kurt Cobain","Janis Joplin","Tupac Shakur","Amy Winehouse"],c:2},
+
+// ── MOVIES EASY (30) ──
+{cat:"Movies",diff:"easy",q:"Which movie features the line I see dead people?",a:["The Shining","Insidious","The Sixth Sense","Get Out"],c:2},
+{cat:"Movies",diff:"easy",q:"Who directed Titanic in 1997?",a:["Spielberg","James Cameron","Nolan","Ridley Scott"],c:1},
+{cat:"Movies",diff:"easy",q:"In which movie does a clownfish search for his son?",a:["Shark Tale","Finding Nemo","Moana","The Little Mermaid"],c:1},
+{cat:"Movies",diff:"easy",q:"What color pill does Neo take in The Matrix?",a:["Blue","Green","Red","White"],c:2},
+{cat:"Movies",diff:"easy",q:"Which movie features the character Simba?",a:["Bambi","Jungle Book","The Lion King","Tarzan"],c:2},
+{cat:"Movies",diff:"easy",q:"To infinity and beyond is a quote from which movie?",a:["Antz","A Bug's Life","Toy Story","Monsters Inc."],c:2},
+{cat:"Movies",diff:"easy",q:"Which superhero is also known as the Man of Steel?",a:["Batman","Iron Man","Superman","Thor"],c:2},
+{cat:"Movies",diff:"easy",q:"Who plays Wolverine in the X-Men films?",a:["Chris Evans","Ryan Reynolds","Hugh Jackman","Tom Hardy"],c:2},
+{cat:"Movies",diff:"easy",q:"Inception and Interstellar are both directed by whom?",a:["Denis Villeneuve","David Fincher","Christopher Nolan","Ridley Scott"],c:2},
+{cat:"Movies",diff:"easy",q:"Which movie features a shark named Bruce?",a:["Jaws","Finding Nemo","The Meg","Deep Blue Sea"],c:1},
+{cat:"Movies",diff:"easy",q:"What is the name of the toy cowboy in Toy Story?",a:["Buzz","Rex","Woody","Hamm"],c:2},
+{cat:"Movies",diff:"easy",q:"Which Disney princess has a dress that turns to ice?",a:["Cinderella","Elsa","Aurora","Snow White"],c:1},
+{cat:"Movies",diff:"easy",q:"Which movie is set in the magical land of Pandora?",a:["Avatar","Prometheus","Guardians of the Galaxy","Interstellar"],c:0},
+{cat:"Movies",diff:"easy",q:"Who played Iron Man in the Avengers films?",a:["Chris Pratt","Mark Ruffalo","Chris Hemsworth","Robert Downey Jr."],c:3},
+{cat:"Movies",diff:"easy",q:"Which movie features the song Let It Go?",a:["Moana","Tangled","Frozen","Brave"],c:2},
+{cat:"Movies",diff:"easy",q:"In Harry Potter what sport do wizards play on broomsticks?",a:["Quodpot","Gobstones","Quidditch","Wizard Chess"],c:2},
+{cat:"Movies",diff:"easy",q:"Which movie franchise features Dominic Toretto?",a:["Mission Impossible","Fast and Furious","Transporter","Die Hard"],c:1},
+{cat:"Movies",diff:"easy",q:"Just keep swimming is a quote from which movie?",a:["Shark Tale","Finding Nemo","Finding Dory","Moana"],c:1},
+{cat:"Movies",diff:"easy",q:"Which animated movie features the Minions?",a:["The Secret Life of Pets","Despicable Me","Sing","The Lorax"],c:1},
+{cat:"Movies",diff:"easy",q:"Which movie features the quote Houston we have a problem?",a:["Interstellar","The Martian","Apollo 13","Gravity"],c:2},
+{cat:"Movies",diff:"easy",q:"Which movie stars Tom Hanks as a man stranded on an island?",a:["The Terminal","Cast Away","Philadelphia","Forrest Gump"],c:1},
+{cat:"Movies",diff:"easy",q:"Which fictional city is Batman's home?",a:["Metropolis","Star City","Gotham City","Central City"],c:2},
+{cat:"Movies",diff:"easy",q:"May the Force be with you is a quote from which franchise?",a:["Star Trek","Star Wars","Guardians of the Galaxy","The Mandalorian"],c:1},
+{cat:"Movies",diff:"easy",q:"Which movie features a T-Rex chasing people in a theme park?",a:["Congo","Jurassic Park","The Lost World","Lake Placid"],c:1},
+{cat:"Movies",diff:"easy",q:"Which company produced most of the classic Disney animated films?",a:["DreamWorks","Pixar","Disney","Universal"],c:2},
+{cat:"Movies",diff:"easy",q:"Who voices Simba in the original 1994 Lion King as an adult?",a:["James Earl Jones","Matthew Broderick","Jonathan Taylor Thomas","Donald Glover"],c:1},
+{cat:"Movies",diff:"easy",q:"Which movie is set on the ocean liner called the RMS Titanic?",a:["The Poseidon Adventure","Titanic","Speed 2","Waterworld"],c:1},
+{cat:"Movies",diff:"easy",q:"Shrek is an ogre who lives in which type of place?",a:["A castle","A cave","A swamp","A forest"],c:2},
+{cat:"Movies",diff:"easy",q:"Which Marvel superhero can shrink and talk to insects?",a:["Wasp","Ant-Man","Hawkeye","Black Widow"],c:1},
+{cat:"Movies",diff:"easy",q:"In which film does Will Smith play a genie?",a:["Bad Boys","Hitch","Aladdin","Gemini Man"],c:2},
+
+// ── MOVIES MEDIUM (25) ──
+{cat:"Movies",diff:"medium",q:"Parasite 2019 is a film from which country?",a:["Japan","China","South Korea","Thailand"],c:2},
+{cat:"Movies",diff:"medium",q:"Who played Tony Stark Iron Man in the MCU?",a:["Chris Evans","Chris Pratt","Robert Downey Jr.","Mark Ruffalo"],c:2},
+{cat:"Movies",diff:"medium",q:"What is the fictional African country in Black Panther?",a:["Zamunda","Wakanda","Genosha","Latveria"],c:1},
+{cat:"Movies",diff:"medium",q:"Which film won the first Academy Award for Best Picture?",a:["Wings","Sunrise","The Jazz Singer","Metropolis"],c:0},
+{cat:"Movies",diff:"medium",q:"Which 1994 film stars Tom Hanks as a man who influences history?",a:["Philadelphia","Cast Away","The Green Mile","Forrest Gump"],c:3},
+{cat:"Movies",diff:"medium",q:"The Godfather is based on a novel by whom?",a:["Stephen King","Mario Puzo","James Ellroy","Don Winslow"],c:1},
+{cat:"Movies",diff:"medium",q:"Which actor played Jack Sparrow in Pirates of the Caribbean?",a:["Orlando Bloom","Keira Knightley","Johnny Depp","Geoffrey Rush"],c:2},
+{cat:"Movies",diff:"medium",q:"Get Out was directed by which comedian-turned-director?",a:["Dave Chappelle","Kevin Hart","Jordan Peele","Eddie Murphy"],c:2},
+{cat:"Movies",diff:"medium",q:"What is the highest-grossing film of all time?",a:["Avengers Endgame","Titanic","Avatar","The Lion King (2019)"],c:2},
+{cat:"Movies",diff:"medium",q:"In The Silence of the Lambs what is Hannibal Lecter's profession?",a:["Lawyer","Psychiatrist","Surgeon","Professor"],c:1},
+{cat:"Movies",diff:"medium",q:"Which actress played Katniss Everdeen in The Hunger Games?",a:["Emma Watson","Shailene Woodley","Jennifer Lawrence","Saoirse Ronan"],c:2},
+{cat:"Movies",diff:"medium",q:"What is the name of the spaceship in the movie Alien?",a:["Nostromo","Discovery One","Endurance","Prometheus"],c:0},
+{cat:"Movies",diff:"medium",q:"Which movie features a character who turns into a Hulk?",a:["Thor","Iron Man","Captain America","The Avengers"],c:3},
+{cat:"Movies",diff:"medium",q:"Spirited Away is a film by which Japanese director?",a:["Mamoru Hosoda","Makoto Shinkai","Satoshi Kon","Hayao Miyazaki"],c:3},
+{cat:"Movies",diff:"medium",q:"In Fight Club who was Tyler Durden revealed to be?",a:["His brother","His best friend","A different personality of the narrator","His father"],c:2},
+{cat:"Movies",diff:"medium",q:"Which actor played Joker in the 2019 standalone film?",a:["Heath Ledger","Jared Leto","Joaquin Phoenix","Jack Nicholson"],c:2},
+{cat:"Movies",diff:"medium",q:"Which film features the quote You can't handle the truth?",a:["A Few Good Men","The Firm","Philadelphia","Primal Fear"],c:0},
+{cat:"Movies",diff:"medium",q:"Who voiced the character Simba in the 2019 CGI Lion King?",a:["Michael B. Jordan","Chadwick Boseman","Donald Glover","John Boyega"],c:2},
+{cat:"Movies",diff:"medium",q:"Which film directed by Spike Lee explored race relations in Brooklyn?",a:["Malcolm X","Crooklyn","Do the Right Thing","25th Hour"],c:2},
+{cat:"Movies",diff:"medium",q:"Which movie famously ends with the line After all tomorrow is another day?",a:["Rebecca","Casablanca","Gone with the Wind","Brief Encounter"],c:2},
+{cat:"Movies",diff:"medium",q:"Who directed The Dark Knight trilogy?",a:["Tim Burton","Joel Schumacher","Zack Snyder","Christopher Nolan"],c:3},
+{cat:"Movies",diff:"medium",q:"Which actress won the Oscar for playing Erin Brockovich?",a:["Meryl Streep","Julia Roberts","Sandra Bullock","Charlize Theron"],c:1},
+{cat:"Movies",diff:"medium",q:"In The Matrix what does the ship Nebuchadnezzar represent?",a:["The simulation","The human resistance base","Agent Smith","The source code"],c:1},
+{cat:"Movies",diff:"medium",q:"Which studio produced the Despicable Me franchise?",a:["DreamWorks","Pixar","Universal Pictures/Illumination","Sony Animation"],c:2},
+{cat:"Movies",diff:"medium",q:"Which 1977 film made Steven Spielberg a household name?",a:["E.T.","Close Encounters","Duel","Jaws"],c:3},
+
+// ── MOVIES HARD (20) ──
+{cat:"Movies",diff:"hard",q:"Which director made 2001 A Space Odyssey?",a:["Ridley Scott","George Lucas","Stanley Kubrick","Steven Spielberg"],c:2},
+{cat:"Movies",diff:"hard",q:"In Inception what is Leo DiCaprio's character name?",a:["Arthur","Cobb","Eames","Mal"],c:1},
+{cat:"Movies",diff:"hard",q:"Who co-wrote the screenplay for Pulp Fiction alongside Tarantino?",a:["Oliver Stone","Coen Brothers","Lawrence Bender","Roger Avary"],c:3},
+{cat:"Movies",diff:"hard",q:"Which Akira Kurosawa film inspired The Magnificent Seven?",a:["Rashomon","Yojimbo","Seven Samurai","Ran"],c:2},
+{cat:"Movies",diff:"hard",q:"In No Country for Old Men who plays Anton Chigurh?",a:["Javier Bardem","Benicio del Toro","Antonio Banderas","Edgar Ramirez"],c:0},
+{cat:"Movies",diff:"hard",q:"Which film won 11 Academy Awards tying the all-time record?",a:["Schindler's List","The Godfather","Titanic","Ben-Hur"],c:2},
+{cat:"Movies",diff:"hard",q:"What year was the original Star Wars A New Hope released?",a:["1975","1977","1979","1981"],c:1},
+{cat:"Movies",diff:"hard",q:"Which French filmmaker directed Amelie?",a:["Claude Chabrol","Francois Truffaut","Jean-Luc Godard","Jean-Pierre Jeunet"],c:3},
+{cat:"Movies",diff:"hard",q:"Das Boot 1981 is a German film about which subject?",a:["WWI trenches","U-boat submarine warfare","Berlin Wall","Luftwaffe pilots"],c:1},
+{cat:"Movies",diff:"hard",q:"Who composed the iconic score for Schindler's List?",a:["Hans Zimmer","James Horner","Ennio Morricone","John Williams"],c:3},
+{cat:"Movies",diff:"hard",q:"Which Coen Brothers film is set during a Minnesota blizzard?",a:["No Country for Old Men","Blood Simple","Fargo","Burn After Reading"],c:2},
+{cat:"Movies",diff:"hard",q:"Tarkovsky's Stalker is based on a novella by which authors?",a:["Dostoevsky","Arkady and Boris Strugatsky","Leo Tolstoy","Vladimir Nabokov"],c:1},
+{cat:"Movies",diff:"hard",q:"What is the name of the technique Hitchcock invented to zoom in while dollying out?",a:["Vertigo effect","Dutch angle","Smash cut","Rack focus"],c:0},
+{cat:"Movies",diff:"hard",q:"Which actress delivered the iconic What a dump line in Beyond the Forest?",a:["Joan Crawford","Bette Davis","Barbara Stanwyck","Rita Hayworth"],c:1},
+{cat:"Movies",diff:"hard",q:"Which Italian director made Once Upon a Time in America?",a:["Federico Fellini","Michelangelo Antonioni","Sergio Leone","Dario Argento"],c:2},
+{cat:"Movies",diff:"hard",q:"The Bicycle Thieves 1948 is a classic of which film movement?",a:["French New Wave","German Expressionism","Italian Neorealism","Soviet Montage"],c:2},
+{cat:"Movies",diff:"hard",q:"Which actor played Napoleon Dynamite's best friend Pedro?",a:["Efren Ramirez","Jon Heder","Aaron Ruell","Diedrich Bader"],c:0},
+{cat:"Movies",diff:"hard",q:"What is the longest film ever nominated for Best Picture at the Oscars?",a:["Gone with the Wind","Ben-Hur","Lawrence of Arabia","Schindler's List"],c:0},
+{cat:"Movies",diff:"hard",q:"Which director made both Oldboy and The Handmaiden?",a:["Bong Joon-ho","Kim Ki-duk","Park Chan-wook","Lee Chang-dong"],c:2},
+{cat:"Movies",diff:"hard",q:"In Blade Runner 2049 who directed the film?",a:["Ridley Scott","Denis Villeneuve","Christopher Nolan","David Fincher"],c:1},
+
+// ── DISHES EASY (30) ──
+{cat:"Dishes",diff:"easy",q:"Which country is the origin of Sushi?",a:["China","South Korea","Japan","Thailand"],c:2},
+{cat:"Dishes",diff:"easy",q:"What is the main ingredient in guacamole?",a:["Tomato","Avocado","Mango","Lime"],c:1},
+{cat:"Dishes",diff:"easy",q:"Pizza originates from which country?",a:["Spain","France","Greece","Italy"],c:3},
+{cat:"Dishes",diff:"easy",q:"What type of bread is traditionally used for shawarma?",a:["Baguette","Ciabatta","Pita","Naan"],c:2},
+{cat:"Dishes",diff:"easy",q:"Which country is known for Jollof Rice?",a:["Ethiopia","South Africa","Ghana and Nigeria","Egypt"],c:2},
+{cat:"Dishes",diff:"easy",q:"What is the main ingredient in hummus?",a:["Lentils","Chickpeas","Black beans","Peas"],c:1},
+{cat:"Dishes",diff:"easy",q:"Spaghetti Bolognese originates from which Italian city?",a:["Rome","Naples","Bologna","Florence"],c:2},
+{cat:"Dishes",diff:"easy",q:"Which spice gives curry its yellow color?",a:["Paprika","Cumin","Turmeric","Coriander"],c:2},
+{cat:"Dishes",diff:"easy",q:"Tacos originate from which country?",a:["Spain","Colombia","Brazil","Mexico"],c:3},
+{cat:"Dishes",diff:"easy",q:"What type of pasta is shaped like small bow ties?",a:["Penne","Fusilli","Farfalle","Rigatoni"],c:2},
+{cat:"Dishes",diff:"easy",q:"Which country invented croissants?",a:["France","Austria","Belgium","Switzerland"],c:1},
+{cat:"Dishes",diff:"easy",q:"What is the main ingredient in falafel?",a:["Lentils","Chickpeas","Broad beans","Kidney beans"],c:1},
+{cat:"Dishes",diff:"easy",q:"Which country is the home of Peking Duck?",a:["Japan","Vietnam","China","South Korea"],c:2},
+{cat:"Dishes",diff:"easy",q:"What is the key spice in Moroccan tagine that gives it its distinctive warmth?",a:["Saffron","Cumin","Ras el hanout","Paprika"],c:2},
+{cat:"Dishes",diff:"easy",q:"Which Italian dessert contains layers of ladyfingers soaked in coffee?",a:["Panna cotta","Cannoli","Tiramisu","Zabaglione"],c:2},
+{cat:"Dishes",diff:"easy",q:"What is the name of the spiced rice dish popular in South Asia?",a:["Risotto","Pilaf","Biryani","Congee"],c:2},
+{cat:"Dishes",diff:"easy",q:"Which country is known for the dish Poutine?",a:["USA","UK","France","Canada"],c:3},
+{cat:"Dishes",diff:"easy",q:"What is naan?",a:["A type of rice","A flatbread","A curry paste","A fermented drink"],c:1},
+{cat:"Dishes",diff:"easy",q:"Which fruit is the main ingredient in a banana split?",a:["Mango","Papaya","Banana","Pineapple"],c:2},
+{cat:"Dishes",diff:"easy",q:"Sauerkraut is a fermented version of which vegetable?",a:["Cucumber","Cabbage","Beetroot","Carrot"],c:1},
+{cat:"Dishes",diff:"easy",q:"Which country gave us the dish Paella?",a:["Portugal","Italy","Spain","Greece"],c:2},
+{cat:"Dishes",diff:"easy",q:"What is the outer layer of an onion called?",a:["Skin","Husk","Peel","Rind"],c:0},
+{cat:"Dishes",diff:"easy",q:"Fish and Chips is the national dish of which country?",a:["Ireland","USA","Australia","UK"],c:3},
+{cat:"Dishes",diff:"easy",q:"Which legume is the main ingredient in Dal?",a:["Chickpeas","Lentils","Black beans","Kidney beans"],c:1},
+{cat:"Dishes",diff:"easy",q:"What is the primary grain used in Japanese sushi rice?",a:["Jasmine rice","Short-grain white rice","Brown rice","Basmati rice"],c:1},
+{cat:"Dishes",diff:"easy",q:"Which sauce is traditionally served with fish and chips?",a:["Tomato ketchup","Mayonnaise","Tartare sauce","Thousand island"],c:2},
+{cat:"Dishes",diff:"easy",q:"Baklava is a sweet pastry made with layers of what?",a:["Puff pastry","Shortcrust pastry","Phyllo dough","Choux pastry"],c:2},
+{cat:"Dishes",diff:"easy",q:"What is the main protein in a traditional Greek gyros?",a:["Chicken or pork","Beef","Lamb","Fish"],c:0},
+{cat:"Dishes",diff:"easy",q:"Which country is famous for its fondue?",a:["France","Germany","Austria","Switzerland"],c:3},
+{cat:"Dishes",diff:"easy",q:"Mole sauce is a complex sauce from which country?",a:["Spain","Colombia","Mexico","Cuba"],c:2},
+
+// ── DISHES MEDIUM (25) ──
+{cat:"Dishes",diff:"medium",q:"Baklava's syrup is traditionally made with honey and which other ingredient?",a:["Rose water","Orange blossom water","Lemon juice","Pomegranate"],c:0},
+{cat:"Dishes",diff:"medium",q:"Rendang is a slow-cooked dry meat dish from which country?",a:["Thailand","Vietnam","Malaysia and Indonesia","Philippines"],c:2},
+{cat:"Dishes",diff:"medium",q:"Which spice gives Risotto Milanese its yellow color?",a:["Turmeric","Paprika","Cumin","Saffron"],c:3},
+{cat:"Dishes",diff:"medium",q:"What is Koshary the national dish of Egypt based on?",a:["Rice lentils and pasta","Meat and flatbread","Fish and couscous","Chickpeas and tahini"],c:0},
+{cat:"Dishes",diff:"medium",q:"Which country is the origin of Pad Thai?",a:["Vietnam","Cambodia","Thailand","Laos"],c:2},
+{cat:"Dishes",diff:"medium",q:"What is Haggis the national dish of Scotland made from?",a:["Lamb liver and oats","Beef and barley","Pork and potato","Chicken and leek"],c:0},
+{cat:"Dishes",diff:"medium",q:"Which nation invented Kimchi?",a:["Japan","China","South Korea","Vietnam"],c:2},
+{cat:"Dishes",diff:"medium",q:"Moussaka is a baked dish associated with which country?",a:["Turkey","Lebanon","Egypt","Greece"],c:3},
+{cat:"Dishes",diff:"medium",q:"Ceviche is a seafood dish raw-cured in citrus from which region?",a:["Southeast Asia","West Africa","Latin America","Mediterranean"],c:2},
+{cat:"Dishes",diff:"medium",q:"What is the main protein in Beef Wellington?",a:["Sirloin","Beef tenderloin fillet","Ribeye","Rump"],c:1},
+{cat:"Dishes",diff:"medium",q:"Pho is a noodle soup from which country?",a:["Thailand","Japan","Vietnam","China"],c:2},
+{cat:"Dishes",diff:"medium",q:"What is the Nigerian soup made with ground melon seeds?",a:["Pepper soup","Egusi soup","Ogbono soup","Okra soup"],c:1},
+{cat:"Dishes",diff:"medium",q:"Which country is responsible for the dish Shawarma?",a:["Egypt","Iran","Turkey and Levant","Saudi Arabia"],c:2},
+{cat:"Dishes",diff:"medium",q:"What is Bibimbap?",a:["A Korean rice dish topped with vegetables","A Japanese noodle soup","A Chinese dumpling dish","A Thai curry"],c:0},
+{cat:"Dishes",diff:"medium",q:"Which country is famous for making Jerk Chicken?",a:["Brazil","Trinidad","Jamaica","Barbados"],c:2},
+{cat:"Dishes",diff:"medium",q:"Tzatziki is a sauce made from yogurt and which main vegetable?",a:["Zucchini","Cucumber","Bell pepper","Garlic only"],c:1},
+{cat:"Dishes",diff:"medium",q:"Which country invented the Croissant even though France made it famous?",a:["France","Austria","Belgium","Switzerland"],c:1},
+{cat:"Dishes",diff:"medium",q:"Chimichurri sauce originates from which country?",a:["Brazil","Chile","Colombia","Argentina"],c:3},
+{cat:"Dishes",diff:"medium",q:"What is the key fermented soybean paste used in Japanese miso soup?",a:["Tofu","Natto","Miso","Dashi"],c:2},
+{cat:"Dishes",diff:"medium",q:"Which dish consists of raw beef typically served with capers and egg yolk?",a:["Carpaccio","Tartare","Bresaola","Prosciutto"],c:1},
+{cat:"Dishes",diff:"medium",q:"Souvlaki is a street food from which country?",a:["Turkey","Albania","Greece","Cyprus"],c:2},
+{cat:"Dishes",diff:"medium",q:"What gives the Indian bread puri its puffed-up shape?",a:["Yeast","Deep frying in hot oil","Steam baking","Baking powder"],c:1},
+{cat:"Dishes",diff:"medium",q:"Which country is famous for Bulgogi?",a:["Japan","China","South Korea","Mongolia"],c:2},
+{cat:"Dishes",diff:"medium",q:"What type of dough is used to make cannoli?",a:["Phyllo","Choux","Fried pastry shells","Puff pastry"],c:2},
+{cat:"Dishes",diff:"medium",q:"Goulash is a stew associated with which country?",a:["Poland","Czech Republic","Austria","Hungary"],c:3},
+
+// ── DISHES HARD (20) ──
+{cat:"Dishes",diff:"hard",q:"Which French sauce is made from egg yolks butter and lemon juice?",a:["Bechamel","Veloute","Hollandaise","Bernaise"],c:2},
+{cat:"Dishes",diff:"hard",q:"Injera is a sourdough flatbread staple from which country?",a:["Sudan","Somalia","Ethiopia","Kenya"],c:2},
+{cat:"Dishes",diff:"hard",q:"What is the Turkish dish Manti?",a:["Grilled lamb skewers","Stuffed grape leaves","Small dumplings with yogurt","Fried dough with honey"],c:2},
+{cat:"Dishes",diff:"hard",q:"Tagine is a slow-cooked dish named after a clay pot from which country?",a:["Tunisia","Egypt","Morocco","Algeria"],c:2},
+{cat:"Dishes",diff:"hard",q:"The Japanese dish Fugu requires special preparation because it contains what toxin?",a:["Mercury","Tetrodotoxin","Cyanide","Capsaicin"],c:1},
+{cat:"Dishes",diff:"hard",q:"Bouillabaisse is a traditional fish stew from which French city?",a:["Paris","Lyon","Marseille","Nice"],c:2},
+{cat:"Dishes",diff:"hard",q:"What does al dente mean in Italian cooking?",a:["Overcooked and soft","Firm to the tooth","Crispy outside","Sauce-coated"],c:1},
+{cat:"Dishes",diff:"hard",q:"Worcestershire sauce contains which unexpected ingredient?",a:["Anchovy","Sardine","Prawn","Crab"],c:0},
+{cat:"Dishes",diff:"hard",q:"Which grain is used to make traditional Japanese sake?",a:["Barley","Wheat","Rice","Millet"],c:2},
+{cat:"Dishes",diff:"hard",q:"What are the five French mother sauces?",a:["Bechamel Veloute Espagnole Hollandaise Tomat","Roux Fond Beurre Glace Fumet","Mornay Nantua Supreme Cardinal Normandy","Allemande Beurre Blanc Demi-glace Remoulade Soubise"],c:0},
+{cat:"Dishes",diff:"hard",q:"Khinkali are Georgian dumplings filled with what?",a:["Potatoes","Spiced meat broth","Cheese only","Spinach and cheese"],c:1},
+{cat:"Dishes",diff:"hard",q:"Which acid is used to make cheese from milk in cheesemaking?",a:["Hydrochloric acid","Citric acid or rennet","Acetic acid","Phosphoric acid"],c:1},
+{cat:"Dishes",diff:"hard",q:"What is Dashi the foundation of Japanese cooking made from?",a:["Rice and vinegar","Kombu seaweed and bonito flakes","Soy sauce and mirin","Sake and sugar"],c:1},
+{cat:"Dishes",diff:"hard",q:"Which cooking technique involves vacuum-sealing food and cooking it in a water bath?",a:["Confit","En papillote","Sous vide","Beurre blanc"],c:2},
+{cat:"Dishes",diff:"hard",q:"Asado is a style of grilling traditionally associated with which country?",a:["Brazil","Mexico","Argentina","Colombia"],c:2},
+{cat:"Dishes",diff:"hard",q:"Perigord in France is famous for which luxury ingredient?",a:["Saffron","Foie gras and truffles","Beluga caviar","Iberico ham"],c:1},
+{cat:"Dishes",diff:"hard",q:"Which country invented the technique of making tempura?",a:["China","Korea","Japan","Portugal (introduced to Japan)"],c:3},
+{cat:"Dishes",diff:"hard",q:"What is the main difference between a stock and a broth?",a:["Stock uses bones broth uses meat","Broth is thicker than stock","Stock is salted broth is not","They are identical"],c:0},
+{cat:"Dishes",diff:"hard",q:"Which ancient civilization is credited with inventing bread making?",a:["Roman","Greek","Egyptian","Mesopotamian"],c:2},
+{cat:"Dishes",diff:"hard",q:"What is Pinot Noir?",a:["An Italian pasta dish","A French wine grape variety","A Spanish cheese","A type of olive oil"],c:1},
+
+// ── GENERAL EASY (30) ──
+{cat:"General",diff:"easy",q:"How many days are in a leap year?",a:["364","365","366","367"],c:2},
+{cat:"General",diff:"easy",q:"What is the capital city of Turkey?",a:["Istanbul","Izmir","Bursa","Ankara"],c:3},
+{cat:"General",diff:"easy",q:"Which planet is closest to the Sun?",a:["Venus","Mercury","Mars","Earth"],c:1},
+{cat:"General",diff:"easy",q:"What is the largest ocean on Earth?",a:["Atlantic","Arctic","Indian","Pacific"],c:3},
+{cat:"General",diff:"easy",q:"How many colors are in a rainbow?",a:["5","6","7","8"],c:2},
+{cat:"General",diff:"easy",q:"Which animal is the fastest on land?",a:["Lion","Horse","Cheetah","Leopard"],c:2},
+{cat:"General",diff:"easy",q:"What gas do humans breathe in?",a:["Carbon dioxide","Nitrogen","Oxygen","Hydrogen"],c:2},
+{cat:"General",diff:"easy",q:"Which country is known as the Land of the Rising Sun?",a:["China","South Korea","Thailand","Japan"],c:3},
+{cat:"General",diff:"easy",q:"What is the largest continent?",a:["Africa","North America","Europe","Asia"],c:3},
+{cat:"General",diff:"easy",q:"What is H2O commonly known as?",a:["Salt","Water","Acid","Alcohol"],c:1},
+{cat:"General",diff:"easy",q:"Which is the smallest planet in our solar system?",a:["Mars","Venus","Mercury","Pluto"],c:2},
+{cat:"General",diff:"easy",q:"In which sport is a puck used instead of a ball?",a:["Polo","Lacrosse","Ice Hockey","Squash"],c:2},
+{cat:"General",diff:"easy",q:"What is the capital of France?",a:["Madrid","Rome","Paris","Berlin"],c:2},
+{cat:"General",diff:"easy",q:"How many sides does a pentagon have?",a:["4","5","6","7"],c:1},
+{cat:"General",diff:"easy",q:"What is the largest mammal on Earth?",a:["Elephant","Blue Whale","Giraffe","Hippopotamus"],c:1},
+{cat:"General",diff:"easy",q:"Which country is home to the Eiffel Tower?",a:["Italy","Spain","Belgium","France"],c:3},
+{cat:"General",diff:"easy",q:"What does WWW stand for?",a:["World Wide Web","Wide Web World","World Web Wide","Worldwide Website"],c:0},
+{cat:"General",diff:"easy",q:"Which planet is known as the Red Planet?",a:["Venus","Jupiter","Mars","Saturn"],c:2},
+{cat:"General",diff:"easy",q:"How many legs does a spider have?",a:["6","8","10","12"],c:1},
+{cat:"General",diff:"easy",q:"Which country has the largest population?",a:["USA","Russia","India","China"],c:3},
+{cat:"General",diff:"easy",q:"What is the chemical symbol for water?",a:["WA","H2O","HO2","W2O"],c:1},
+{cat:"General",diff:"easy",q:"How many hours are in a day?",a:["12","20","24","48"],c:2},
+{cat:"General",diff:"easy",q:"What is the capital of the United Kingdom?",a:["Manchester","Birmingham","Edinburgh","London"],c:3},
+{cat:"General",diff:"easy",q:"Which bird is the symbol of peace?",a:["Eagle","Swan","Dove","Robin"],c:2},
+{cat:"General",diff:"easy",q:"How many continents are there?",a:["5","6","7","8"],c:2},
+{cat:"General",diff:"easy",q:"What type of animal is a Nile crocodile?",a:["Mammal","Amphibian","Reptile","Bird"],c:2},
+{cat:"General",diff:"easy",q:"Which country is famous for the Colosseum?",a:["Greece","Turkey","Egypt","Italy"],c:3},
+{cat:"General",diff:"easy",q:"What is 7 times 8?",a:["48","54","56","64"],c:2},
+{cat:"General",diff:"easy",q:"Which language has the most native speakers worldwide?",a:["English","Spanish","Hindi","Mandarin Chinese"],c:3},
+{cat:"General",diff:"easy",q:"What is the name of the longest river in Africa?",a:["Congo","Zambezi","Niger","Nile"],c:3},
+
+// ── GENERAL MEDIUM (25) ──
+{cat:"General",diff:"medium",q:"How many bones are in the adult human body?",a:["196","206","216","226"],c:1},
+{cat:"General",diff:"medium",q:"What is the chemical symbol for gold?",a:["Go","Gd","Au","Ag"],c:2},
+{cat:"General",diff:"medium",q:"In which year did World War II end?",a:["1943","1944","1945","1946"],c:2},
+{cat:"General",diff:"medium",q:"Which country hosted the 2022 FIFA World Cup?",a:["UAE","Saudi Arabia","Qatar","Bahrain"],c:2},
+{cat:"General",diff:"medium",q:"What is the largest country in the world by area?",a:["Canada","USA","China","Russia"],c:3},
+{cat:"General",diff:"medium",q:"Which ocean is the Bermuda Triangle located in?",a:["Pacific","Indian","Atlantic","Arctic"],c:2},
+{cat:"General",diff:"medium",q:"What is the currency of Japan?",a:["Yuan","Won","Yen","Ringgit"],c:2},
+{cat:"General",diff:"medium",q:"Which organ produces insulin in the human body?",a:["Liver","Kidney","Pancreas","Spleen"],c:2},
+{cat:"General",diff:"medium",q:"In Python programming what keyword defines a function?",a:["func","define","def","function"],c:2},
+{cat:"General",diff:"medium",q:"How many players are on a basketball team on the court?",a:["4","5","6","7"],c:1},
+{cat:"General",diff:"medium",q:"What is the tallest building in the world?",a:["Shanghai Tower","One World Trade","Burj Khalifa","Makkah Clock Tower"],c:2},
+{cat:"General",diff:"medium",q:"Which planet has the most moons?",a:["Jupiter","Saturn","Uranus","Neptune"],c:1},
+{cat:"General",diff:"medium",q:"What is the capital of Australia?",a:["Sydney","Melbourne","Brisbane","Canberra"],c:3},
+{cat:"General",diff:"medium",q:"The Amazon River flows primarily through which country?",a:["Colombia","Peru","Venezuela","Brazil"],c:3},
+{cat:"General",diff:"medium",q:"What is the Great Barrier Reef?",a:["A mountain range","A coral reef system","An underwater canyon","A chain of islands"],c:1},
+{cat:"General",diff:"medium",q:"Which element has the symbol Fe?",a:["Fluorine","Francium","Iron","Fermium"],c:2},
+{cat:"General",diff:"medium",q:"What is the capital of Canada?",a:["Toronto","Vancouver","Montreal","Ottawa"],c:3},
+{cat:"General",diff:"medium",q:"In what year was the Titanic built and launched?",a:["1908","1910","1912","1914"],c:2},
+{cat:"General",diff:"medium",q:"Which gas is responsible for the greenhouse effect?",a:["Nitrogen","Oxygen","Carbon dioxide","Argon"],c:2},
+{cat:"General",diff:"medium",q:"What is the square root of 144?",a:["10","11","12","13"],c:2},
+{cat:"General",diff:"medium",q:"Which country has the most time zones?",a:["USA","Russia","China","France"],c:3},
+{cat:"General",diff:"medium",q:"What does an electrocardiogram measure?",a:["Brain waves","Blood pressure","Heart electrical activity","Lung capacity"],c:2},
+{cat:"General",diff:"medium",q:"Which country built the Great Wall?",a:["Japan","Mongolia","China","Korea"],c:2},
+{cat:"General",diff:"medium",q:"What is the name of the deepest lake in the world?",a:["Caspian Sea","Lake Superior","Lake Tanganyika","Lake Baikal"],c:3},
+{cat:"General",diff:"medium",q:"Which two elements make up water?",a:["Hydrogen and Nitrogen","Oxygen and Carbon","Hydrogen and Oxygen","Carbon and Hydrogen"],c:2},
+
+// ── GENERAL HARD (20) ──
+{cat:"General",diff:"hard",q:"What is the speed of light in a vacuum in km/s approximately?",a:["200000","250000","299792","350000"],c:2},
+{cat:"General",diff:"hard",q:"Which element has the highest melting point?",a:["Iron","Platinum","Tungsten","Osmium"],c:2},
+{cat:"General",diff:"hard",q:"What is the approximate age of the universe?",a:["9.8 billion years","13.8 billion years","17.2 billion years","20 billion years"],c:1},
+{cat:"General",diff:"hard",q:"The Fibonacci sequence starts 0 1 1 2 3 5 — what is the 10th number?",a:["34","44","55","66"],c:0},
+{cat:"General",diff:"hard",q:"What does DNA stand for?",a:["Deoxyribonucleic Acid","Deoxyribose Nucleic Atom","Dinucleotide Acid","Double Nucleic Acid"],c:0},
+{cat:"General",diff:"hard",q:"Which two countries share the longest international border?",a:["USA and Mexico","Russia and China","USA and Canada","Brazil and Argentina"],c:2},
+{cat:"General",diff:"hard",q:"Euler's number e is approximately?",a:["1.618","2.718","3.141","1.414"],c:1},
+{cat:"General",diff:"hard",q:"Which gas is most abundant in Earth's atmosphere?",a:["Oxygen","Carbon dioxide","Argon","Nitrogen"],c:3},
+{cat:"General",diff:"hard",q:"What is the half-life of Carbon-14?",a:["1370 years","5730 years","14000 years","57000 years"],c:1},
+{cat:"General",diff:"hard",q:"The Ottoman Empire's capital was which city?",a:["Ankara","Bursa","Constantinople","Edirne"],c:2},
+{cat:"General",diff:"hard",q:"What is the atomic number of Carbon?",a:["4","6","8","12"],c:1},
+{cat:"General",diff:"hard",q:"Which philosopher wrote The Republic?",a:["Aristotle","Socrates","Plato","Descartes"],c:2},
+{cat:"General",diff:"hard",q:"Which treaty ended World War I?",a:["Treaty of Paris","Treaty of Utrecht","Treaty of Versailles","Treaty of Berlin"],c:2},
+{cat:"General",diff:"hard",q:"What is the Mariana Trench?",a:["The longest river","The deepest ocean trench","The highest mountain","The largest desert"],c:1},
+{cat:"General",diff:"hard",q:"Which scientist proposed the theory of general relativity?",a:["Newton","Bohr","Einstein","Heisenberg"],c:2},
+{cat:"General",diff:"hard",q:"How many chambers does the human heart have?",a:["2","3","4","5"],c:2},
+{cat:"General",diff:"hard",q:"What is the integral of cos x with respect to x?",a:["sin x","-sin x","tan x","-cos x"],c:0},
+{cat:"General",diff:"hard",q:"Which country won the most medals at the 2020 Tokyo Olympics?",a:["China","Japan","UK","USA"],c:3},
+{cat:"General",diff:"hard",q:"What is Schrodinger's Cat a thought experiment about?",a:["Animal behavior","Quantum superposition","Particle physics","Wave-particle duality"],c:1},
+{cat:"General",diff:"hard",q:"Which ancient wonder was located in Alexandria Egypt?",a:["Colossus of Rhodes","Hanging Gardens","The Lighthouse","Temple of Artemis"],c:2},
+
+// ── FOOTBALL EASY (25) ──
+{cat:"Football",diff:"easy",q:"Which country won the 2022 FIFA World Cup?",a:["France","Brazil","Argentina","Germany"],c:2},
+{cat:"Football",diff:"easy",q:"How many players are on a football team on the pitch?",a:["9","10","11","12"],c:2},
+{cat:"Football",diff:"easy",q:"Which club is known as the Red Devils?",a:["Arsenal","Liverpool","Manchester United","AC Milan"],c:2},
+{cat:"Football",diff:"easy",q:"Who has won the Ballon d'Or the most times in history?",a:["Cristiano Ronaldo","Ronaldinho","Zinedine Zidane","Lionel Messi"],c:3},
+{cat:"Football",diff:"easy",q:"Which country does Cristiano Ronaldo play for?",a:["Spain","Brazil","Portugal","Italy"],c:2},
+{cat:"Football",diff:"easy",q:"What colour card means a player is sent off?",a:["Yellow","Orange","Blue","Red"],c:3},
+{cat:"Football",diff:"easy",q:"How long is a standard football match?",a:["80 minutes","85 minutes","90 minutes","95 minutes"],c:2},
+{cat:"Football",diff:"easy",q:"Which English club plays at Old Trafford?",a:["Manchester City","Chelsea","Liverpool","Manchester United"],c:3},
+{cat:"Football",diff:"easy",q:"Which country has won the most FIFA World Cups?",a:["Germany","Argentina","Italy","Brazil"],c:3},
+{cat:"Football",diff:"easy",q:"What is the name of the main European club competition?",a:["Europa League","Champions League","FIFA Cup","Super Cup"],c:1},
+{cat:"Football",diff:"easy",q:"Which city is home to both Arsenal and Tottenham Hotspur?",a:["Manchester","Birmingham","Liverpool","London"],c:3},
+{cat:"Football",diff:"easy",q:"Barcelona plays in which country?",a:["Italy","Portugal","France","Spain"],c:3},
+{cat:"Football",diff:"easy",q:"Who is known as O Fenomeno the Brazilian striker from the 1990s?",a:["Ronaldinho","Romario","Ronaldo R9","Rivaldo"],c:2},
+{cat:"Football",diff:"easy",q:"What does VAR stand for in football?",a:["Video Assistant Referee","Virtual Automatic Review","Visual Analysis Recording","Video Action Replay"],c:0},
+{cat:"Football",diff:"easy",q:"Which country hosted the 2018 FIFA World Cup?",a:["Brazil","Qatar","Germany","Russia"],c:3},
+{cat:"Football",diff:"easy",q:"Which Premier League club plays at Anfield?",a:["Everton","Liverpool","Manchester City","Leeds United"],c:1},
+{cat:"Football",diff:"easy",q:"How many teams compete in the Premier League?",a:["18","20","22","24"],c:1},
+{cat:"Football",diff:"easy",q:"What is a hat-trick in football?",a:["Three assists in one game","Three yellow cards","Three goals by one player in one match","A penalty shootout"],c:2},
+{cat:"Football",diff:"easy",q:"Which club is Real Madrid's biggest rival?",a:["Atletico Madrid","Sevilla","Valencia","Barcelona"],c:3},
+{cat:"Football",diff:"easy",q:"Which player is nicknamed CR7?",a:["Cristiano Ronaldo","Carlos Roberto","Cafu","Claudio Reyna"],c:0},
+{cat:"Football",diff:"easy",q:"In which country is the Bundesliga played?",a:["Austria","Switzerland","Netherlands","Germany"],c:3},
+{cat:"Football",diff:"easy",q:"Which African country has appeared in the most World Cups?",a:["Nigeria","Ghana","Cameroon","Egypt"],c:2},
+{cat:"Football",diff:"easy",q:"Which position stands between the posts to stop goals?",a:["Defender","Midfielder","Goalkeeper","Striker"],c:2},
+{cat:"Football",diff:"easy",q:"Which club plays in the city of Madrid and wears red and white stripes?",a:["Real Madrid","Getafe","Rayo Vallecano","Atletico Madrid"],c:3},
+{cat:"Football",diff:"easy",q:"How many minutes is each half of a standard football match?",a:["40","45","50","60"],c:1},
+
+// ── FOOTBALL MEDIUM (28) ──
+{cat:"Football",diff:"medium",q:"Which club has won the most UEFA Champions League titles?",a:["Barcelona","Bayern Munich","AC Milan","Real Madrid"],c:3},
+{cat:"Football",diff:"medium",q:"Who scored the winning penalty in the 2022 World Cup final for Argentina?",a:["Mbappe","Messi","Di Maria","Gonzalo Montiel"],c:3},
+{cat:"Football",diff:"medium",q:"Which player won the Golden Boot at the 2018 World Cup?",a:["Cristiano Ronaldo","Neymar","Harry Kane","Antoine Griezmann"],c:2},
+{cat:"Football",diff:"medium",q:"Who is the all-time top scorer in the UEFA Champions League?",a:["Lionel Messi","Raul","Robert Lewandowski","Cristiano Ronaldo"],c:3},
+{cat:"Football",diff:"medium",q:"In what year was the Premier League founded?",a:["1988","1990","1992","1995"],c:2},
+{cat:"Football",diff:"medium",q:"Which club did Zinedine Zidane play for in Spain?",a:["Barcelona","Atletico Madrid","Valencia","Real Madrid"],c:3},
+{cat:"Football",diff:"medium",q:"Which country knocked Brazil out of the 2014 World Cup semi-final 7-1?",a:["Argentina","Netherlands","Germany","Spain"],c:2},
+{cat:"Football",diff:"medium",q:"Erling Haaland plays for which national team?",a:["Denmark","Sweden","Finland","Norway"],c:3},
+{cat:"Football",diff:"medium",q:"Which Turkish club is known as the Yellow Canaries?",a:["Besiktas","Galatasaray","Trabzonspor","Fenerbahce"],c:3},
+{cat:"Football",diff:"medium",q:"Who is Turkey's all-time leading international goal scorer?",a:["Emre Belozoglu","Tuncay Sanli","Hakan Sukur","Arda Turan"],c:2},
+{cat:"Football",diff:"medium",q:"Which Italian club is nicknamed the Old Lady?",a:["Inter Milan","AC Milan","Napoli","Juventus"],c:3},
+{cat:"Football",diff:"medium",q:"Who managed Barcelona during their treble-winning 2009 season?",a:["Luis Enrique","Frank Rijkaard","Johan Cruyff","Pep Guardiola"],c:3},
+{cat:"Football",diff:"medium",q:"In which year did Leicester City famously win the Premier League?",a:["2014","2015","2016","2017"],c:2},
+{cat:"Football",diff:"medium",q:"Which country does Mohamed Salah play for internationally?",a:["Libya","Algeria","Tunisia","Egypt"],c:3},
+{cat:"Football",diff:"medium",q:"What is the name of Manchester City's home stadium?",a:["Etihad Stadium","City of Manchester","Eastlands","Maine Road"],c:0},
+{cat:"Football",diff:"medium",q:"Which club has won the most English league titles?",a:["Arsenal","Liverpool","Manchester United","Chelsea"],c:2},
+{cat:"Football",diff:"medium",q:"Who scored the famous Hand of God goal?",a:["Pele","Ronaldo","Diego Maradona","Johan Cruyff"],c:2},
+{cat:"Football",diff:"medium",q:"How many substitutions are allowed in a standard professional match?",a:["3","4","5","6"],c:2},
+{cat:"Football",diff:"medium",q:"Which club did Ronaldo join after leaving Manchester United in 2009?",a:["Juventus","PSG","Inter Miami","Real Madrid"],c:3},
+{cat:"Football",diff:"medium",q:"Which team won Euro 2020 held in 2021?",a:["England","Spain","France","Italy"],c:3},
+{cat:"Football",diff:"medium",q:"Who is the top scorer in World Cup history overall?",a:["Ronaldo","Pele","Miroslav Klose","Gerd Muller"],c:2},
+{cat:"Football",diff:"medium",q:"Which Premier League club is nicknamed the Gunners?",a:["Chelsea","Tottenham","Arsenal","West Ham"],c:2},
+{cat:"Football",diff:"medium",q:"In what year did Turkey finish third place in the FIFA World Cup?",a:["1998","2002","2006","2010"],c:1},
+{cat:"Football",diff:"medium",q:"Which club plays at the Bernabeu stadium?",a:["Atletico Madrid","Barcelona","Valencia","Real Madrid"],c:3},
+{cat:"Football",diff:"medium",q:"Which African player won the Ballon d'Or in 1995?",a:["George Weah","Didier Drogba","Samuel Eto'o","Abedi Pele"],c:0},
+{cat:"Football",diff:"medium",q:"Which Turkish club plays at the Turk Telekom Stadium?",a:["Fenerbahce","Besiktas","Trabzonspor","Galatasaray"],c:3},
+{cat:"Football",diff:"medium",q:"Which country did Didier Drogba represent internationally?",a:["Ghana","Nigeria","Ivory Coast","Cameroon"],c:2},
+{cat:"Football",diff:"medium",q:"Which Brazilian player won the World Cup in 1994 and 2002?",a:["Romario","Ronaldo R9","Cafu","Roberto Carlos"],c:2},
+
+// ── FOOTBALL HARD (22) ──
+{cat:"Football",diff:"hard",q:"Who scored the goal that won the 1966 World Cup final for England?",a:["Bobby Charlton","Geoff Hurst","Roger Hunt","Martin Peters"],c:1},
+{cat:"Football",diff:"hard",q:"Which player has played in the most World Cup tournaments?",a:["Pele","Cafu","Lothar Matthaus","Paolo Maldini"],c:2},
+{cat:"Football",diff:"hard",q:"Which club did Johan Cruyff most famously manage as a coach?",a:["Ajax","PSV","Barcelona","Feyenoord"],c:2},
+{cat:"Football",diff:"hard",q:"Who invented Total Football as a football philosophy?",a:["Arrigo Sacchi","Rinus Michels","Ernst Happel","Pep Guardiola"],c:1},
+{cat:"Football",diff:"hard",q:"Which player scored a hat-trick vs Portugal in the 2018 World Cup group stage?",a:["Karim Benzema","Antoine Griezmann","Cristiano Ronaldo","Eden Hazard"],c:2},
+{cat:"Football",diff:"hard",q:"Which club did Luka Modric play for before joining Real Madrid?",a:["Dinamo Zagreb only","Sevilla","Atletico Madrid","Tottenham Hotspur"],c:3},
+{cat:"Football",diff:"hard",q:"In what year was FIFA founded?",a:["1900","1902","1904","1908"],c:2},
+{cat:"Football",diff:"hard",q:"Which English club went unbeaten for the entire 2003-04 Premier League season?",a:["Manchester United","Chelsea","Liverpool","Arsenal"],c:3},
+{cat:"Football",diff:"hard",q:"How many times has Brazil won the FIFA World Cup?",a:["4","5","6","7"],c:1},
+{cat:"Football",diff:"hard",q:"Who won the first ever Ballon d'Or award in 1956?",a:["Alfredo Di Stefano","Stanley Matthews","Just Fontaine","Raymond Kopa"],c:1},
+{cat:"Football",diff:"hard",q:"Which country has won the Africa Cup of Nations the most times?",a:["Nigeria","Ghana","Cameroon","Egypt"],c:3},
+{cat:"Football",diff:"hard",q:"Which player scored the winning goal for Manchester United in the 1999 Champions League final?",a:["Andy Cole","Ole Gunnar Solskjaer","Peter Schmeichel","Teddy Sheringham"],c:1},
+{cat:"Football",diff:"hard",q:"Which manager has won the Champions League with three different clubs?",a:["Jose Mourinho","Pep Guardiola","Carlo Ancelotti","Jupp Heynckes"],c:2},
+{cat:"Football",diff:"hard",q:"What nationality is football legend Ronaldinho?",a:["Argentine","Colombian","Brazilian","Uruguayan"],c:2},
+{cat:"Football",diff:"hard",q:"Who was the top scorer in the 2014 FIFA World Cup?",a:["Lionel Messi","Thomas Muller","James Rodriguez","Neymar"],c:2},
+{cat:"Football",diff:"hard",q:"In what year did FIFA change the backpass rule forbidding goalkeepers from handling deliberate passes?",a:["1988","1990","1992","1994"],c:2},
+{cat:"Football",diff:"hard",q:"Which player has scored the most goals in a single Champions League season with 17 goals?",a:["Messi","Cristiano Ronaldo","Lewandowski","Benzema"],c:1},
+{cat:"Football",diff:"hard",q:"Which nation hosted the first FIFA World Cup in 1930?",a:["Brazil","Argentina","Chile","Uruguay"],c:3},
+{cat:"Football",diff:"hard",q:"Who holds the record for most international goals scored by a male player?",a:["Cristiano Ronaldo","Lionel Messi","Ali Daei","Mokhtar Dahari"],c:0},
+{cat:"Football",diff:"hard",q:"Which Turkish player scored against South Korea in the 2002 World Cup third place play-off?",a:["Hakan Sukur","Ilhan Mansiz","Umit Davala","Bulent Korkmaz"],c:0},
+{cat:"Football",diff:"hard",q:"What is the name of the Turkish national football stadium in Istanbul?",a:["Fenerbahce Stadium","Vodafone Park","Ataturk Olympic Stadium","Rams Park"],c:2},
+{cat:"Football",diff:"hard",q:"Which player famously wore the number 10 shirt for Argentina in 1986 and was the tournament's best player?",a:["Gabriel Batistuta","Mario Kempes","Diego Maradona","Jorge Valdano"],c:2}
+];
+
+// ════════════════════════════════════════════════
+//  SETTINGS STATE
+// ════════════════════════════════════════════════
+var CFG = { qCount:15, lives:10, timerOn:true };
+var Q_COUNTS = [10,15,20,25];
+var LIVES_OPTS = [3,5,10,15];
+var qci=1, lci=2;
+
+function cycleQCount(){
+  qci=(qci+1)%Q_COUNTS.length;
+  CFG.qCount=Q_COUNTS[qci];
+  document.getElementById("qs-val").textContent=CFG.qCount;
+  var t=document.getElementById("qs-tile");
+  t.classList.toggle("active-setting",CFG.qCount!==15);
+}
+function cycleLives(){
+  lci=(lci+1)%LIVES_OPTS.length;
+  CFG.lives=LIVES_OPTS[lci];
+  document.getElementById("lives-val").textContent=CFG.lives;
+}
+function cycleTimer(){
+  CFG.timerOn=!CFG.timerOn;
+  document.getElementById("timer-val").textContent=CFG.timerOn?"ON":"OFF";
+  document.getElementById("timer-tile").classList.toggle("active-setting",!CFG.timerOn);
+}
+
+// ════════════════════════════════════════════════
+//  USED QUESTION TRACKING
+// ════════════════════════════════════════════════
+var USED_KEY="tt_quiz_used_v3";
+function getUsed(){try{return JSON.parse(localStorage.getItem(USED_KEY)||"[]");}catch(e){return[];}}
+function markUsed(ids){try{var u=getUsed();ids.forEach(function(id){if(u.indexOf(id)<0)u.push(id);});localStorage.setItem(USED_KEY,JSON.stringify(u));}catch(e){}}
+function resetUsed(){try{localStorage.removeItem(USED_KEY);}catch(e){}}
+
+// ════════════════════════════════════════════════
+//  GAME STATE
+// ════════════════════════════════════════════════
+var S={qs:[],cur:0,score:0,lives:3,streak:0,bestStreak:0,right:0,wrong:0,tInt:null,tVal:20,tMax:20,ans:false,ll:{f:true,s:true,t:true},aiQs:[],gameWaitingForAI:false};
+
+// ════════════════════════════════════════════════
+//  HOME INIT
+// ════════════════════════════════════════════════
+function initHome(){
+  var cats=["Music","Movies","Dishes","General","Football"];
+  var total=0;
+  cats.forEach(function(cat){
+    var n=QB.filter(function(q){return q.cat===cat;}).length;
+    var el=document.getElementById("cnt-"+cat);
+    if(el)el.textContent=n+" questions";
+    total+=n;
+  });
+  var pl=document.getElementById("pool-badge");if(pl)pl.textContent=total+"+ Qs";
+  loadBest();
+}
+
+function confirmHome(){
+  if(confirm("Go back to home? Your current progress will be lost.")){
+    clearInterval(S.tInt);
+    goHome();
+  }
+}
+
+function loadBest(){
+  try{
+    var b=parseInt(localStorage.getItem("tt_best")||"0");
+    document.querySelector("#home-best span").textContent=b.toLocaleString();
+    var fc=document.getElementById("fc-best");
+    if(fc)fc.textContent=b.toLocaleString()+" pts";
+  }catch(e){}
+}
+
+function toggleCat(el){el.classList.toggle("sel");}
+function toggleDiff(el){el.classList.toggle("sel");}
+function selectAll(){document.querySelectorAll(".cat-tile").forEach(function(t){t.classList.add("sel");});}
+function goHome(){showScreen("home");loadBest();}
+
+// ════════════════════════════════════════════════
+//  START GAME
+// ════════════════════════════════════════════════
+function startGame(){
+  var cats=[...document.querySelectorAll(".cat-tile.sel")].map(function(c){return c.dataset.cat;});
+  var diffs=[...document.querySelectorAll(".diff-tile.sel")].map(function(d){return d.dataset.d;});
+  if(!cats.length){alert("Pick at least one category!");return;}
+  if(!diffs.length){alert("Pick at least one difficulty!");return;}
+
+  var qs=buildQ(cats,diffs,CFG.qCount);
+  if(!qs.length){
+    resetUsed();
+    qs=buildQ(cats,diffs,CFG.qCount);
+    if(!qs.length){alert("No questions for this selection.");return;}
+  }
+
+  S.qs=qs; S.cur=0; S.score=0; S.lives=CFG.lives; S.streak=0; S.bestStreak=0; S.right=0; S.wrong=0; S.aiQs=[]; S.gameWaitingForAI=false;
+  S.ll={f:true,s:true,t:true};
+  resetLL();
+  updateHUD();
+  buildDots();
+  showScreen("game");
+  loadQ();
+}
+
+function buildQ(cats,diffs,count){
+  var used=getUsed();
+  var indexed=QB.map(function(q,i){return{q:q,i:i};});
+  var pool=indexed.filter(function(x){return cats.indexOf(x.q.cat)>=0&&diffs.indexOf(x.q.diff)>=0&&used.indexOf(x.i)<0;});
+  pool=shuffle(pool);
+  var chosen=pool.slice(0,Math.min(count,pool.length));
+  markUsed(chosen.map(function(c){return c.i;}));
+  return chosen.map(function(c){return c.q;});
+}
+
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+
+// ════════════════════════════════════════════════
+//  AI QUESTION GENERATION
+// ════════════════════════════════════════════════
+var AI_GENERATING=false;
+
+// FIX: AI generates silently in the background — never blocks the game
+async function generateAIQuestions(cats,diffs){
+  if(AI_GENERATING)return;
+  AI_GENERATING=true;
+  // Show a subtle badge, never hide the question
+  showAIBadge(true);
+
+  var catStr=cats.join(", ");
+  var diffStr=diffs.join(", ");
+  var prompt="Generate 20 quiz questions. Return ONLY a valid JSON array, no markdown fences, no commentary, just the raw JSON.\n\nFormat: [{\"cat\":\"Music\",\"diff\":\"medium\",\"q\":\"Question?\",\"a\":[\"Option A\",\"Option B\",\"Option C\",\"Option D\"],\"c\":2}]\n\nStrict rules:\n- cat must be one of: "+catStr+"\n- diff must be one of: "+diffStr+"\n- Exactly 4 answers per question, c is the 0-based index of the CORRECT answer\n- Every single fact must be 100% verifiable and correct\n- Cover a wide variety: sports records, geography, science, history, pop culture, food, cinema\n- Do NOT repeat these overused topics: Michael Jackson Thriller, Queen Bohemian Rhapsody, Drake, Beyonce Lemonade, Titanic film, The Matrix red pill, Finding Nemo, Pizza Italy, Sushi Japan, Turkey capital Ankara\n- Distribute difficulties evenly across easy / medium / hard\n\nGenerate 20 fresh verified questions now:";
+
+  try{
+    var resp=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:3500,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    var data=await resp.json();
+    var text=data.content.filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("");
+    // Strip any accidental markdown fences
+    var clean=text.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
+    // Find first [ to last ] in case there's stray text
+    var start=clean.indexOf("[");
+    var end=clean.lastIndexOf("]");
+    if(start!==-1&&end!==-1)clean=clean.slice(start,end+1);
+    var newQs=JSON.parse(clean);
+    if(Array.isArray(newQs)&&newQs.length>0){
+      newQs=newQs.filter(function(q){
+        return q.cat&&q.diff&&q.q&&Array.isArray(q.a)&&q.a.length===4&&typeof q.c==="number"&&q.c>=0&&q.c<=3;
+      });
+      newQs.forEach(function(q){q.aiGenerated=true;});
+      S.aiQs=newQs;
+    }
+  }catch(e){
+  }
+
+  AI_GENERATING=false;
+  showAIBadge(false);
+  // If the local bank ran out while AI was generating, now load the AI questions
+  if(S.gameWaitingForAI&&S.aiQs.length>0){
+    S.gameWaitingForAI=false;
+    var batch=S.aiQs.splice(0,Math.min(10,S.aiQs.length));
+    S.qs=S.qs.concat(batch);
+    buildDots();
+    showAILoading(false);
+    loadQ();
+  }
+}
+
+// Subtle spinning dot in header — game stays fully playable
+function showAIBadge(show){
+  var badge=document.getElementById("ai-badge");
+  if(badge)badge.style.display=show?"flex":"none";
+}
+
+function showAILoading(show){
+  document.getElementById("ai-loading").classList.toggle("show",show);
+  document.getElementById("q-body").style.display=show?"none":"flex";
+  document.getElementById("dots-bar").style.opacity=show?"0":"1";
+}
+
+// ════════════════════════════════════════════════
+//  LOAD QUESTION
+// ════════════════════════════════════════════════
+function loadQ(){
+  // Out of questions — try AI bank first, then end
+  if(S.cur>=S.qs.length){
+    if(S.aiQs.length>0){
+      // Grab next batch from AI bank
+      var batch=S.aiQs.splice(0,Math.min(10,S.aiQs.length));
+      S.qs=S.qs.concat(batch);
+      buildDots();
+    }else if(AI_GENERATING){
+      // AI is still working — show loading screen and wait
+      S.gameWaitingForAI=true;
+      showAILoading(true);
+      return;
+    }else{
+      // Genuinely out of questions
+      endGame();return;
+    }
+  }
+
+  var q=S.qs[S.cur];
+  S.ans=false;
+
+  document.getElementById("hud-qnum").textContent="Q "+(S.cur+1)+" / "+S.qs.length;
+  document.getElementById("q-prog-fill").style.width=((S.cur/S.qs.length)*100)+"%";
+
+  var ct=document.getElementById("q-cat-tag"); ct.textContent=q.cat; ct.className="q-tag "+q.cat;
+  var dt=document.getElementById("q-diff-tag"); dt.textContent=q.diff.toUpperCase(); dt.className="q-tag diff "+q.diff;
+  var ai=document.getElementById("q-ai-tag"); ai.style.display=q.aiGenerated?"inline":"none";
+
+  document.getElementById("q-text").textContent=q.q;
+  document.getElementById("fb-text").textContent="";
+  document.getElementById("fb-text").className="fb-text";
+  document.getElementById("next-btn").classList.remove("show");
+
+  var lets=["A","B","C","D"];
+  document.getElementById("answers").innerHTML=q.a.map(function(ans,i){
+    return '<button class="ans" onclick="selectAns('+i+')" id="ans-'+i+'"><span class="ans-letter">'+lets[i]+'</span>'+ans+'</button>';
+  }).join("");
+
+  updateDots(false);
+  if(CFG.timerOn)startTimer(q.diff);
+  else{document.getElementById("timer-fill").style.width="100%";}
+
+  // Kick off AI generation from question 3 — runs silently in background
+  if(S.cur===2&&S.aiQs.length===0&&!AI_GENERATING){
+    var cats=[...document.querySelectorAll(".cat-tile.sel")].map(function(c){return c.dataset.cat;});
+    var diffs=[...document.querySelectorAll(".diff-tile.sel")].map(function(d){return d.dataset.d;});
+    generateAIQuestions(cats,diffs);
+  }
+}
+
+// ════════════════════════════════════════════════
+//  TIMER
+// ════════════════════════════════════════════════
+function startTimer(diff){
+  clearInterval(S.tInt);
+  S.tMax=diff==="easy"?22:diff==="medium"?16:12;
+  S.tVal=S.tMax; tick();
+  S.tInt=setInterval(function(){S.tVal-=0.1;tick();if(S.tVal<=0){clearInterval(S.tInt);if(!S.ans)timeOut();}},100);
+}
+
+function tick(){
+  var pct=Math.max(0,(S.tVal/S.tMax)*100);
+  var f=document.getElementById("timer-fill"); f.style.width=pct+"%";
+  f.className="timer-fill"+(pct<25?" t-danger":pct<50?" t-warn":"");
+}
+
+function timeOut(){
+  S.ans=true; var q=S.qs[S.cur];
+  document.getElementById("ans-"+q.c).classList.add("correct");
+  document.querySelectorAll(".ans").forEach(function(b){b.disabled=true;});
+  document.getElementById("fb-text").textContent="TIME OUT! Answer: "+q.a[q.c];
+  document.getElementById("fb-text").className="fb-text no";
+  S.lives=Math.max(0,S.lives-1); S.streak=0; updateHUD();
+  document.getElementById("next-btn").classList.add("show");
+}
+
+// ════════════════════════════════════════════════
+//  ANSWER
+// ════════════════════════════════════════════════
+function selectAns(idx){
+  if(S.ans)return;
+  S.ans=true; clearInterval(S.tInt);
+  var q=S.qs[S.cur];
+  document.querySelectorAll(".ans").forEach(function(b){b.disabled=true;});
+
+  if(idx===q.c){
+    document.getElementById("ans-"+idx).classList.add("correct");
+    var pts=calcPts(q.diff,S.tVal,S.tMax);
+    S.score+=pts; S.right++; S.streak++;
+    if(S.streak>S.bestStreak)S.bestStreak=S.streak;
+
+    // +1 life every 2-streak (streak 2, 4, 6, 8 ...)
+    if(S.streak%2===0){
+      S.lives++;
+      updateHUD();
+      popLifeBonus();
+    }
+
+    document.getElementById("fb-text").textContent="CORRECT! +"+pts;
+    document.getElementById("fb-text").className="fb-text ok";
+    popScore("+"+pts);
+    if(S.streak>=3)popStreak(S.streak+"x STREAK!");
+    var sv=document.getElementById("hud-score");
+    sv.textContent=S.score.toLocaleString();
+    sv.classList.remove("bump");
+    void sv.offsetWidth;
+    sv.classList.add("bump");
+  }else{
+    document.getElementById("ans-"+idx).classList.add("wrong");
+    document.getElementById("ans-"+q.c).classList.add("correct");
+    document.getElementById("fb-text").textContent="WRONG — "+q.a[q.c];
+    document.getElementById("fb-text").className="fb-text no";
+    S.lives=Math.max(0,S.lives-1); S.streak=0; S.wrong++;
+  }
+
+  updateHUD();
+  updateDots(true);
+  document.getElementById("next-btn").classList.add("show");
+}
+
+function calcPts(diff,t,max){
+  var base=diff==="easy"?100:diff==="medium"?200:350;
+  var bonus=CFG.timerOn?Math.round((t/max)*70):0;
+  return base+bonus;
+}
+
+// ════════════════════════════════════════════════
+//  LIFELINES
+// ════════════════════════════════════════════════
+function resetLL(){
+  ["ll-50","ll-skip","ll-time"].forEach(function(id){var e=document.getElementById(id);if(e)e.disabled=false;});
+  S.ll={f:true,s:true,t:true};
+}
+
+function useFifty(){
+  if(!S.ll.f||S.ans)return;
+  S.ll.f=false; document.getElementById("ll-50").disabled=true;
+  var q=S.qs[S.cur];
+  var wrong=[0,1,2,3].filter(function(i){return i!==q.c;});
+  shuffle(wrong).slice(0,2).forEach(function(i){var b=document.getElementById("ans-"+i);if(b){b.style.opacity=".1";b.disabled=true;}});
+}
+
+function useSkip(){
+  if(!S.ll.s||S.ans)return;
+  S.ll.s=false; document.getElementById("ll-skip").disabled=true;
+  clearInterval(S.tInt); S.ans=true;
+  document.querySelectorAll(".ans").forEach(function(b){b.disabled=true;});
+  document.getElementById("fb-text").textContent="Skipped — no penalty";
+  document.getElementById("fb-text").className="fb-text skip";
+  document.getElementById("next-btn").classList.add("show");
+}
+
+function useTime(){
+  if(!S.ll.t||S.ans)return;
+  S.ll.t=false; document.getElementById("ll-time").disabled=true;
+  S.tVal=Math.min(S.tMax,S.tVal+10);
+}
+
+// ════════════════════════════════════════════════
+//  NEXT / HUD / DOTS
+// ════════════════════════════════════════════════
+function nextQ(){
+  S.cur++;
+  // Only end game if lives are gone — otherwise keep going (loadQ handles running out of questions)
+  if(S.lives<=0){endGame();}
+  else{loadQ();}
+}
+
+function updateHUD(){
+  document.getElementById("hud-score").textContent=S.score.toLocaleString();
+  // Show emoji hearts up to 5, then number for larger counts
+  var livesDisplay;
+  if(S.lives<=5){
+    livesDisplay="❤️".repeat(Math.max(0,S.lives));
+  }else{
+    livesDisplay="❤️ x"+S.lives;
+  }
+  document.getElementById("hud-lives").textContent=livesDisplay;
+  document.getElementById("hud-streak").textContent=S.streak+(S.streak>=3?"🔥":"");
+}
+
+function buildDots(){
+  document.getElementById("dots-bar").innerHTML=S.qs.map(function(_,i){
+    return '<div class="dot" id="dot-'+i+'"></div>';
+  }).join("");
+}
+
+function updateDots(ja){
+  S.qs.forEach(function(_,i){
+    var d=document.getElementById("dot-"+i); if(!d)return;
+    if(i<S.cur){d.className="dot c";}
+    else if(i===S.cur){d.className=ja?(document.querySelector(".ans.wrong")?"dot w":"dot c"):"dot cur";}
+  });
+}
+
+// ════════════════════════════════════════════════
+//  EFFECTS
+// ════════════════════════════════════════════════
+function popStreak(msg){
+  var el=document.getElementById("streak-pop");
+  el.textContent=msg; el.className="streak-pop fire";
+  setTimeout(function(){el.className="streak-pop";},950);
+}
+
+function popScore(msg){
+  var el=document.createElement("div"); el.className="pts-pop"; el.textContent=msg;
+  el.style.left=(30+Math.random()*20)+"px"; el.style.top="80px";
+  document.body.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.remove();},950);
+}
+
+function popLifeBonus(){
+  var el=document.createElement("div");
+  el.className="pts-pop";
+  el.textContent="+1 ❤️ LIFE BONUS!";
+  el.style.left="50%";
+  el.style.transform="translateX(-50%)";
+  el.style.top="110px";
+  el.style.fontSize="1.1rem";
+  el.style.color="#e03535";
+  el.style.textShadow="0 0 14px rgba(224,53,53,.7)";
+  el.style.whiteSpace="nowrap";
+  document.body.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.remove();},1200);
+}
+
+// ════════════════════════════════════════════════
+//  END GAME
+// ════════════════════════════════════════════════
+function endGame(){
+  clearInterval(S.tInt);
+  var total=S.right+S.wrong;
+  var pct=total?Math.round((S.right/total)*100):0;
+  var verdict,vc,gl;
+
+  if(S.lives<=0){verdict="GAME OVER";vc="lose";}
+  else if(pct>=90){verdict="GENIUS!";vc="win";}
+  else if(pct>=75){verdict="BRILLIANT!";vc="win";}
+  else if(pct>=60){verdict="WELL DONE!";vc="ok";}
+  else{verdict="KEEP GOING!";vc="lose";}
+
+  var gradeColors={"S":"#d4a843","A":"#27a85f","B":"#3478f6","C":"#e07820","D":"#e03535"};
+  var gradeLabels={"S":"GENIUS","A":"EXCELLENT","B":"GOOD JOB","C":"AVERAGE","D":"STUDY MORE"};
+  gl=pct>=95?"S":pct>=85?"A":pct>=70?"B":pct>=55?"C":"D";
+
+  document.getElementById("result-verdict").textContent=verdict;
+  document.getElementById("result-verdict").className="result-verdict "+vc;
+  document.getElementById("result-score").textContent=S.score.toLocaleString();
+  document.getElementById("rs-correct").textContent=S.right;
+  document.getElementById("rs-wrong").textContent=S.wrong;
+  document.getElementById("rs-best").textContent=S.bestStreak;
+  document.getElementById("grade-letter").textContent=gl;
+  document.getElementById("grade-letter").style.color=gradeColors[gl];
+  document.getElementById("grade-sub").textContent=gradeLabels[gl];
+
+  try{
+    var best=parseInt(localStorage.getItem("tt_best")||"0");
+    var nb=document.getElementById("new-best");
+    if(S.score>best){localStorage.setItem("tt_best",S.score);nb.style.display="block";}
+    else{nb.style.display="none";}
+  }catch(e){}
+
+  showScreen("result");
+}
+
+// ════════════════════════════════════════════════
+//  SCREEN MANAGER
+// ════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(function(s){
+    if(s.id===id){s.classList.remove("exit");s.classList.add("active");}
+    else{s.classList.add("exit");s.classList.remove("active");setTimeout(function(){s.classList.remove("exit");},350);}
+  });
+}
+
+// INIT
+initHome();
+</script>
+</body>
+</html>
